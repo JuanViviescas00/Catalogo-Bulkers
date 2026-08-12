@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+
+# Archivos de entorno
+.env
+.env.*
+
+# Logs
+*.log
+
+# Archivos de subida (Multer)
+uploads/
+*.zip
+
+# Cobertura de tests
+coverage/

@@ -1,0 +1,32 @@
+# Dependencias de Node
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Archivos de entorno (Credenciales y secretos)
+.env
+*.env
+backend/.env
+frontend/.env
+
+# Archivos de subida / temporales / adjuntos
+uploads/
+backend/uploads/
+*.zip
+*.tar.gz
+*.log
+
+# Cobertura de pruebas (Jest)
+coverage/
+
+# Archivos del sistema operativo y editores IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Datos persistentes de contenedores / base de datos local
+mongo_data/
+redis_data/
+
+DOC/
