@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  # Servicio Backend / API Express
+  api:
+    build: ./backend
+    container_name: catalogo_api
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file: ./backend/.env
+    depends_on:
+      - mongo
+      - redis
+
+  # Base de Datos MongoDB 7
+  mongo:
+    image: mongo:7
+    container_name: catalogo_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: catalogobulk
+    volumes:
+      - mongo_data:/data/db
+
+  # Servicio de Caché y Cola (Redis 7)
+  redis:
+    image: redis:7-alpine
+    container_name: catalogo_redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo_data:
