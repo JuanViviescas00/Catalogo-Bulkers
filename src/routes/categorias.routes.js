@@ -16,6 +16,6 @@ router.put('/:id', (req, res) => {
   res.json({ message: `Categoría ${req.params.id} enriquecida` });
 });
 
-// NOTA: No existe POST /api/categorias (se crean solas durante el import)
+
 
 export default router;
