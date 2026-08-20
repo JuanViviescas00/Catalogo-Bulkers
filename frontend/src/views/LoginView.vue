@@ -1,65 +1,69 @@
 <template>
-  <q-page class="bg-grey-2 flex flex-center">
-    <q-card class="q-pa-md shadow-5 flex-center" style="width: 400px; max-width: 90vw; border-radius: 12px">
-      <q-card-section class="text-center">
-        <q-avatar size="72px" class="bg-primary text-white q-mb-sm shadow-3">
-          <q-icon name="shopping_bag" />
-        </q-avatar>
-        <div class="text-h5 text-weight-bold text-primary">CatálogoBulk</div>
-        <div class="text-caption text-grey-7">Inicia sesión con tu cuenta</div>
-      </q-card-section>
+  <q-layout view="lHh Lpr lFf">
+    <q-page-container>
+      <q-page class="bg-grey-2 flex flex-center">
+        <q-card class="q-pa-md shadow-5 text-center" style="width: 400px; max-width: 90vw; border-radius: 12px">
+          <q-card-section>
+            <q-avatar size="72px" class="bg-primary text-white q-mb-sm shadow-3">
+              <q-icon name="shopping_bag" />
+            </q-avatar>
+            <div class="text-h5 text-weight-bold text-primary">CatálogoBulk</div>
+            <div class="text-caption text-grey-7">Inicia sesión con tu cuenta</div>
+          </q-card-section>
 
-      <q-card-section>
-        <q-form @submit.prevent="alEnviar" class="q-gutter-md">
-          <q-input
-            v-model="formulario.email"
-            label="Correo electrónico"
-            type="email"
-            outlined
-            dense
-            lazy-rules
-            :rules="[val => !!val || 'El correo es obligatorio']"
-          >
-            <template v-slot:prepend>
-              <q-icon name="email" />
-            </template>
-          </q-input>
+          <q-card-section>
+            <q-form @submit.prevent="alEnviar" class="q-gutter-md">
+              <q-input
+                v-model="formulario.email"
+                label="Correo electrónico"
+                type="email"
+                outlined
+                dense
+                lazy-rules
+                :rules="[val => !!val || 'El correo es obligatorio']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="email" />
+                </template>
+              </q-input>
 
-          <q-input
-            v-model="formulario.password"
-            label="Contraseña"
-            :type="mostrarPassword ? 'text' : 'password'"
-            outlined
-            dense
-            lazy-rules
-            :rules="[val => !!val || 'La contraseña es obligatoria']"
-          >
-            <template v-slot:prepend>
-              <q-icon name="lock" />
-            </template>
-            <template v-slot:append>
-              <q-icon
-                :name="mostrarPassword ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="mostrarPassword = !mostrarPassword"
-              />
-            </template>
-          </q-input>
+              <q-input
+                v-model="formulario.password"
+                label="Contraseña"
+                :type="mostrarPassword ? 'text' : 'password'"
+                outlined
+                dense
+                lazy-rules
+                :rules="[val => !!val || 'La contraseña es obligatoria']"
+              >
+                <template v-slot:prepend>
+                  <q-icon name="lock" />
+                </template>
+                <template v-slot:append>
+                  <q-icon
+                    :name="mostrarPassword ? 'visibility_off' : 'visibility'"
+                    class="cursor-pointer"
+                    @click="mostrarPassword = !mostrarPassword"
+                  />
+                </template>
+              </q-input>
 
-          <div>
-            <q-btn
-              label="Iniciar Sesión"
-              type="submit"
-              color="primary"
-              class="full-width text-weight-bold"
-              size="lg"
-              :loading="cargando"
-            />
-          </div>
-        </q-form>
-      </q-card-section>
-    </q-card>
-  </q-page>
+              <div>
+                <q-btn
+                  label="Iniciar Sesión"
+                  type="submit"
+                  color="primary"
+                  class="full-width text-weight-bold"
+                  size="lg"
+                  :loading="cargando"
+                />
+              </div>
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script setup>

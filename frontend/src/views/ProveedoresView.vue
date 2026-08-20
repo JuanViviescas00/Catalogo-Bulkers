@@ -113,7 +113,7 @@
             </div>
           </q-form>
         </q-card-section>
-      </card>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
