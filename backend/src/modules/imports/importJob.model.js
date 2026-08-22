@@ -28,7 +28,7 @@ const importJobSchema = new mongoose.Schema(
     proveedorId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Proveedor',
-      required: [true, 'El proveedorId es requerido'],
+      default: null,
     },
     archivoNombre: {
       type: String,

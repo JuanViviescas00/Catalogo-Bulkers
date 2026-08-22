@@ -1,0 +1,14 @@
+[
+  {
+    "nombre": "Ferretería",
+    "slug": "ferreteria",
+    "descripcion": "Productos para construcción y mantenimiento",
+    "imagenUrl": "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789"
+  },
+  {
+    "nombre": "Herramientas",
+    "slug": "herramientas",
+    "descripcion": "Herramientas profesionales y manuales",
+    "imagenUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518"
+  }
+]

@@ -6,7 +6,8 @@ export const crearImportJob = async (req, res, next) => {
   try {
     const resultado = await service.crearImportJob({
       usuarioId: req.usuario.id,
-      proveedorId: req.body.proveedorId,
+      proveedorId: req.body?.proveedorId || null,
+      tipo: req.body?.tipo || 'todos',
       archivo: req.file,
     });
     res.status(202).json(resultado);

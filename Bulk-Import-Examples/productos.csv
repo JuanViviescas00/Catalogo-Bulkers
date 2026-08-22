@@ -1,0 +1,5 @@
+sku,nombre,precio,stock,categoria,descripcion,imagenUrl,proveedor,activo,disponible
+PROD-001,Arandelas de cobre,1450,20,ferreteria,Arandelas de cobre para instalaciones,https://images.unsplash.com/photo-1581092918056-0c4c3acd3789,Proveedor Uno,true,true
+PROD-002,Taladro Inalámbrico,4200,12,ferreteria,Taladro compacto con batería,https://images.unsplash.com/photo-1581147036324-c17ac5d7d4af,Proveedor Uno,true,true
+PROD-003,Kit de llaves combinadas,980,30,herramientas,Kit de herramientas profesionales,https://images.unsplash.com/photo-1513467535987-fd81bc7d62f8,Proveedor Dos,true,true
+PROD-004,Sierra Circular,3500,8,herramientas,Sierra circular de corte preciso,https://images.unsplash.com/photo-1504148455328-c376907d081c,Proveedor Dos,true,true

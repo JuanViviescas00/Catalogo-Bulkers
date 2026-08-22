@@ -2,6 +2,15 @@ import CategoriaService from './categoria.service.js';
 
 const service = new CategoriaService();
 
+export const crearCategoria = async (req, res, next) => {
+  try {
+    const nuevaCategoria = await service.crearCategoria(req.body);
+    res.status(201).json(nuevaCategoria);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const listarCategorias = async (req, res, next) => {
   try {
     const categorias = await service.listarCategorias();

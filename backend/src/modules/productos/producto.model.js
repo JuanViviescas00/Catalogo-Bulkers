@@ -71,9 +71,8 @@ const productoSchema = new mongoose.Schema(
 );
 
 // Calcular disponible automáticamente antes de guardar
-productoSchema.pre('save', function (next) {
+productoSchema.pre('save', async function () {
   this.disponible = this.stock > 0 && this.activo !== false;
-  next();
 });
 
 export default mongoose.model('Producto', productoSchema, 'productos');

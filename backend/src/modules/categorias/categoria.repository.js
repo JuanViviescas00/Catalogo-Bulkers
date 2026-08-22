@@ -1,12 +1,20 @@
 import Categoria from './categoria.model.js';
 
 export class CategoriaRepository {
+  async crear(datos) {
+    return await Categoria.create(datos);
+  }
+
   async obtenerTodas() {
     return await Categoria.find().sort({ nombre: 1 }).exec();
   }
 
   async obtenerPorSlug(slug) {
     return await Categoria.findOne({ slug });
+  }
+
+  async obtenerPorNombre(nombre) {
+    return await Categoria.findOne({ nombre: nombre.trim() });
   }
 
   async obtenerPorId(id) {
