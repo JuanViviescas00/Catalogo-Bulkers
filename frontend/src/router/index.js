@@ -16,7 +16,7 @@ import NotFoundView from '@/views/NotFoundView.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: LoginView,
     meta: { titulo: 'Iniciar Sesión', soloInvitados: true },
@@ -26,10 +26,10 @@ const routes = [
     component: AdminLayout,
     children: [
       {
-        path: 'catalogo',
+        path: '',
         name: 'catalogo',
         component: CatalogoView,
-        meta: { titulo: 'Catálogo de Productos', requiereAuth: true },
+        meta: { titulo: 'Catálogo de Productos', requiereAuth: false },
       },
       {
         path: 'productos',
@@ -89,7 +89,7 @@ function protegerRutas(to) {
   if (to.meta.requiereAuth === true && !auth.estaAutenticado) {
     Notify.create({
       type: 'negative',
-      message: 'Debes iniciar sesión para acceder a esta vista',
+      message: 'Debes iniciar sesión para acceder a esta vista administrativa',
       icon: 'lock',
       position: 'top-right',
     });

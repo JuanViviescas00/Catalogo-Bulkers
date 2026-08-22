@@ -11,6 +11,7 @@
 
         <q-space />
 
+        <!-- SESIÓN INICIADA -->
         <div v-if="auth.estaAutenticado" class="row items-center q-gutter-x-md">
           <q-chip color="secondary" text-color="white" icon="account_circle">
             {{ auth.user?.email }} ({{ auth.rol }})
@@ -19,6 +20,18 @@
           <q-btn flat round icon="logout" @click="cerrarSesion">
             <q-tooltip>Cerrar Sesión</q-tooltip>
           </q-btn>
+        </div>
+
+        <!-- VISITANTE NO AUTENTICADO -->
+        <div v-else class="row items-center">
+          <q-btn
+            label="Iniciar Sesión"
+            icon="login"
+            color="white"
+            text-color="primary"
+            class="text-weight-bold"
+            to="/login"
+          />
         </div>
       </q-toolbar>
     </q-header>
@@ -30,7 +43,8 @@
             Navegación
           </q-item-label>
 
-          <q-item clickable v-ripple to="/catalogo" active-class="bg-blue-1 text-primary text-weight-bold">
+          <!-- VISTAS PÚBLICAS -->
+          <q-item clickable v-ripple to="/" exact active-class="bg-blue-1 text-primary text-weight-bold">
             <q-item-section avatar>
               <q-icon name="storefront" />
             </q-item-section>
@@ -38,53 +52,6 @@
               <q-item-label>Catálogo E-Commerce</q-item-label>
             </q-item-section>
           </q-item>
-
-          <q-item clickable v-ripple to="/productos" active-class="bg-blue-1 text-primary text-weight-bold">
-            <q-item-section avatar>
-              <q-icon name="inventory_2" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>CRUD Productos</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/proveedores" active-class="bg-blue-1 text-primary text-weight-bold">
-            <q-item-section avatar>
-              <q-icon name="business" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>CRUD Proveedores</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/categorias" active-class="bg-blue-1 text-primary text-weight-bold">
-            <q-item-section avatar>
-              <q-icon name="category" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>CRUD Categorías</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/usuarios" active-class="bg-blue-1 text-primary text-weight-bold">
-            <q-item-section avatar>
-              <q-icon name="people" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>CRUD Usuarios</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-item clickable v-ripple to="/imports" active-class="bg-blue-1 text-primary text-weight-bold">
-            <q-item-section avatar>
-              <q-icon name="cloud_upload" />
-            </q-item-section>
-            <q-item-section>
-              <q-item-label>Importación Masiva</q-item-label>
-            </q-item-section>
-          </q-item>
-
-          <q-separator class="q-my-md" />
 
           <q-item clickable v-ripple to="/acerca" active-class="bg-blue-1 text-primary text-weight-bold">
             <q-item-section avatar>
@@ -94,6 +61,71 @@
               <q-item-label>Acerca de / Docs</q-item-label>
             </q-item-section>
           </q-item>
+
+          <!-- VISTAS DE ADMINISTRACIÓN (SOLO AUTENTICADOS) -->
+          <template v-if="auth.estaAutenticado">
+            <q-separator class="q-my-md" />
+            <q-item-label header class="text-weight-bold text-uppercase text-grey-8">
+              Administración
+            </q-item-label>
+
+            <q-item clickable v-ripple to="/productos" active-class="bg-blue-1 text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="inventory_2" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>CRUD Productos</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple to="/proveedores" active-class="bg-blue-1 text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="business" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>CRUD Proveedores</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple to="/categorias" active-class="bg-blue-1 text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="category" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>CRUD Categorías</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple to="/usuarios" active-class="bg-blue-1 text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="people" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>CRUD Usuarios</q-item-label>
+              </q-item-section>
+            </q-item>
+
+            <q-item clickable v-ripple to="/imports" active-class="bg-blue-1 text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="cloud_upload" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Importación Masiva</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
+
+          <template v-else>
+            <q-separator class="q-my-md" />
+            <q-item clickable v-ripple to="/login" class="text-primary text-weight-bold">
+              <q-item-section avatar>
+                <q-icon name="lock" color="primary" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>Iniciar Sesión (Admin)</q-item-label>
+              </q-item-section>
+            </q-item>
+          </template>
         </q-list>
       </q-scroll-area>
     </q-drawer>
@@ -118,7 +150,7 @@ function toggleLeftDrawer() {
 }
 
 function irAHome() {
-  router.push('/catalogo');
+  router.push('/');
 }
 
 function cerrarSesion() {

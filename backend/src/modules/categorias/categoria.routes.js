@@ -8,10 +8,11 @@ import { autenticar, exigirRol } from '../../middlewares/auth.js';
 
 const router = Router();
 
-router.use(autenticar);
-
+// Rutas de lectura públicas
 router.get('/', listarCategorias);
 router.get('/:slug', obtenerCategoriaPorSlug);
-router.put('/:id', exigirRol('admin'), actualizarCategoria);
+
+// Rutas administrativas protegidas
+router.put('/:id', autenticar, exigirRol('admin'), actualizarCategoria);
 
 export default router;

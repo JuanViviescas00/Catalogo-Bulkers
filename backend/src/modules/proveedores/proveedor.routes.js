@@ -10,15 +10,13 @@ import { autenticar, exigirRol } from '../../middlewares/auth.js';
 
 const router = Router();
 
-// Todas las rutas requieren autenticación
-router.use(autenticar);
-
+// Rutas de lectura públicas
 router.get('/', listarProveedores);
 router.get('/:id', obtenerProveedorPorId);
 
-// Solo administradores pueden crear, editar o desactivar proveedores
-router.post('/', exigirRol('admin'), crearProveedor);
-router.put('/:id', exigirRol('admin'), actualizarProveedor);
-router.delete('/:id', exigirRol('admin'), eliminarProveedor);
+// Rutas administrativas protegidas
+router.post('/', autenticar, exigirRol('admin'), crearProveedor);
+router.put('/:id', autenticar, exigirRol('admin'), actualizarProveedor);
+router.delete('/:id', autenticar, exigirRol('admin'), eliminarProveedor);
 
 export default router;
