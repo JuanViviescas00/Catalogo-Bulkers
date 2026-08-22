@@ -19,7 +19,10 @@ export function useConfirmar() {
    * @param {string} opciones.mensaje
    * @param {string} [opciones.textoOk="Confirmar"]
    * @param {string} [opciones.color="primary"]
-   * @returns {Promise<boolean>} true si el usuario acepto
+   * @returns {Promise<b
+   * 
+   * 
+   * olean>} true si el usuario acepto
    */
   const confirmar = ({
     titulo,

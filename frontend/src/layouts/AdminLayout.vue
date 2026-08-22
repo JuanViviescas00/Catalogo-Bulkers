@@ -53,14 +53,14 @@
             </q-item-section>
           </q-item>
 
-          <q-item clickable v-ripple to="/acerca" active-class="bg-blue-1 text-primary text-weight-bold">
+          <!-- <q-item clickable v-ripple to="/acerca" active-class="bg-blue-1 text-primary text-weight-bold">
             <q-item-section avatar>
               <q-icon name="info" />
             </q-item-section>
             <q-item-section>
               <q-item-label>Acerca de / Docs</q-item-label>
             </q-item-section>
-          </q-item>
+          </q-item> -->
 
           <!-- VISTAS DE ADMINISTRACIÓN (SOLO AUTENTICADOS) -->
           <template v-if="auth.estaAutenticado">
@@ -117,14 +117,14 @@
 
           <template v-else>
             <q-separator class="q-my-md" />
-            <q-item clickable v-ripple to="/login" class="text-primary text-weight-bold">
+            <!-- <q-item clickable v-ripple to="/login" class="text-primary text-weight-bold">
               <q-item-section avatar>
                 <q-icon name="lock" color="primary" />
               </q-item-section>
               <q-item-section>
                 <q-item-label>Iniciar Sesión (Admin)</q-item-label>
               </q-item-section>
-            </q-item>
+            </q-item> -->
           </template>
         </q-list>
       </q-scroll-area>

@@ -8,7 +8,7 @@
               <q-icon name="shopping_bag" />
             </q-avatar>
             <div class="text-h5 text-weight-bold text-primary">CatálogoBulk</div>
-            <div class="text-caption text-grey-7">Inicia sesión con tu cuenta</div>
+            <div class="text-caption text-grey-7">Inicia sesión con tu cuenta de administrador</div>
           </q-card-section>
 
           <q-card-section>
@@ -57,6 +57,16 @@
                   size="lg"
                   :loading="cargando"
                 />
+
+                <q-btn
+                  flat
+                  no-caps
+                  color="primary"
+                  icon="arrow_back"
+                  label="Regresar al Catálogo"
+                  to="/"
+                  class="q-mt-sm full-width text-weight-bold"
+                />
               </div>
             </q-form>
           </q-card-section>
@@ -94,7 +104,7 @@ async function alEnviar() {
       icon: 'check_circle',
       position: 'top-right',
     });
-    router.push('/catalogo');
+    router.push('/');
   } catch (error) {
     $q.notify({
       type: 'negative',
