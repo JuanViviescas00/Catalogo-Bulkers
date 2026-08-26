@@ -1,5 +1,17 @@
 import { Quasar, Notify, Dialog, Loading } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css';
+
+// Importar Animaciones de Quasar / Animate.css desde @quasar/extras
+import '@quasar/extras/animate/fadeIn.css';
+import '@quasar/extras/animate/fadeOut.css';
+import '@quasar/extras/animate/fadeInUp.css';
+import '@quasar/extras/animate/fadeInDown.css';
+import '@quasar/extras/animate/zoomIn.css';
+import '@quasar/extras/animate/zoomOut.css';
+import '@quasar/extras/animate/slideInLeft.css';
+import '@quasar/extras/animate/slideInRight.css';
+import '@quasar/extras/animate/bounceIn.css';
+
 import 'quasar/src/css/index.sass';
 import lang from 'quasar/lang/es';
 
@@ -26,3 +38,5 @@ export function instalarQuasar(app) {
     },
   });
 }
+
+export default instalarQuasar;

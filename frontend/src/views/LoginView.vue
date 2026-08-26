@@ -37,7 +37,7 @@ const iniciarSesion = async () => {
 
 <template>
   <div class="login-shell">
-    <div class="login-panel">
+    <div class="login-panel animated zoomIn">
       <div class="login-panel__side">
         <div class="login-panel__brand">
           <div class="login-panel__badge">
