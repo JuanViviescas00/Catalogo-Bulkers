@@ -2,20 +2,31 @@ import axios from 'axios';
 import { router } from '@/router';
 import { useAuthStore } from '@/store/Auth';
 
+const determinarBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    return envUrl;
+  }
+
+  // Fallback dinámico usando el nombre de host actual (localhost o IP de red local)
+  if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+    const host = window.location.hostname;
+    return `http://${host}:3000/api`;
+  }
+
+  return 'http://localhost:3000/api';
+};
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: determinarBaseURL(),
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 });
 
-const rutasPublicas = ['/productos', '/categorias', '/proveedores'];
-
 api.interceptors.request.use((config) => {
   const auth = useAuthStore();
-  const url = String(config.url || '');
-  const esRutaPublica = rutasPublicas.some((ruta) => url.includes(ruta));
 
-  if (auth.token && !esRutaPublica) {
+  if (auth.token) {
     config.headers.Authorization = `Bearer ${auth.token}`;
   }
 
@@ -32,7 +43,7 @@ api.interceptors.response.use(
       data?.error?.mensaje ||
       data?.error?.message ||
       (typeof data?.error === 'string' ? data.error : '') ||
-      'Ocurrió un error inesperado';
+      'Ocurrió un error inesperado de red o conexión al servidor';
 
     const normalized = {
       status: error.response?.status ?? 0,
@@ -45,14 +56,12 @@ api.interceptors.response.use(
     };
 
     const currentRoute = router.currentRoute.value;
-    const esRutaPublica = currentRoute.name === 'catalogo' || currentRoute.path === '/';
-    const esPeticionPublica = typeof error.config?.url === 'string' && rutasPublicas.some((ruta) => error.config.url.includes(ruta));
 
     if (normalized.status === 401) {
       const auth = useAuthStore();
       auth.cerrarSesion();
 
-      if (!esRutaPublica && !esPeticionPublica && currentRoute.name !== 'login') {
+      if (currentRoute.name !== 'catalogo' && currentRoute.name !== 'login') {
         router.push({ name: 'login' });
       }
     }
