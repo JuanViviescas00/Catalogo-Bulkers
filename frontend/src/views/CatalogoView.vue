@@ -28,18 +28,18 @@ const extraerLista = (res) => {
 const cargar = async () => {
   cargando.value = true;
   try {
-    const [resProductos, resCategorias, resProveedores] = await Promise.all([
+    const [resProd, resCat, resProv] = await Promise.allSettled([
       get('/productos'),
       get('/categorias'),
       get('/proveedores'),
     ]);
 
-    productos.value = extraerLista(resProductos);
-    categorias.value = extraerLista(resCategorias);
-    proveedores.value = extraerLista(resProveedores);
+    if (resProd.status === 'fulfilled') productos.value = extraerLista(resProd.value);
+    if (resCat.status === 'fulfilled') categorias.value = extraerLista(resCat.value);
+    if (resProv.status === 'fulfilled') proveedores.value = extraerLista(resProv.value);
     general.marcarSincronizacion();
   } catch (e) {
-    notificarError(e);
+    console.error(e);
   } finally {
     cargando.value = false;
   }
