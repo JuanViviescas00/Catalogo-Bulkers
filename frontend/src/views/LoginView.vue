@@ -20,13 +20,13 @@ const iniciarSesion = async () => {
 
   try {
     const respuesta = await post('/auth/login', {
-      email: formulario.value.email.trim(),
-      password: formulario.value.password,
+      email: (formulario.value.email || '').trim().toLowerCase(),
+      password: (formulario.value.password || '').trim(),
     });
 
     auth.guardarSesion(respuesta);
     notificarOk(`Bienvenido`);
-    router.push({ name: 'proveedores' });
+    router.push({ name: 'catalogo' });
   } catch (e) {
     notificarError(e);
   } finally {

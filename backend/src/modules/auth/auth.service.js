@@ -8,16 +8,27 @@ const repo = new AuthRepository();
 
 export class AuthService {
   async registrar({ email, password, rol = 'user' }) {
-    const usuarioExistente = await repo.buscarPorEmail(email);
+    const emailSanitizado = (email || '').trim().toLowerCase();
+    const passwordSanitizada = (password || '').trim();
+
+    if (!emailSanitizado) {
+      throw new AppError('El correo electrónico es obligatorio', 400, 'MISSING_EMAIL');
+    }
+
+    if (!passwordSanitizada) {
+      throw new AppError('La contraseña es obligatoria', 400, 'MISSING_PASSWORD');
+    }
+
+    const usuarioExistente = await repo.buscarPorEmail(emailSanitizado);
     if (usuarioExistente) {
       throw new AppError('El correo electrónico ya se encuentra registrado', 409, 'EMAIL_EXISTS');
     }
 
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(passwordSanitizada, saltRounds);
 
     const nuevoUsuario = await repo.crearUsuario({
-      email,
+      email: emailSanitizado,
       password: hashedPassword,
       rol,
     });
@@ -30,12 +41,19 @@ export class AuthService {
   }
 
   async login({ email, password }) {
-    const usuario = await repo.buscarPorEmail(email, true);
+    const emailSanitizado = (email || '').trim().toLowerCase();
+    const passwordSanitizada = (password || '').trim();
+
+    if (!emailSanitizado || !passwordSanitizada) {
+      throw new AppError('Credenciales inválidas', 401, 'INVALID_CREDENTIALS');
+    }
+
+    const usuario = await repo.buscarPorEmail(emailSanitizado, true);
     if (!usuario) {
       throw new AppError('Credenciales inválidas', 401, 'INVALID_CREDENTIALS');
     }
 
-    const esPasswordValido = await bcrypt.compare(password, usuario.password);
+    const esPasswordValido = await bcrypt.compare(passwordSanitizada, usuario.password);
     if (!esPasswordValido) {
       throw new AppError('Credenciales inválidas', 401, 'INVALID_CREDENTIALS');
     }

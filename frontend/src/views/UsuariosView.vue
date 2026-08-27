@@ -46,8 +46,8 @@ const guardar = async () => {
   guardando.value = true;
   try {
     const respuesta = await post('/auth/register', {
-      email: formulario.value.email.trim(),
-      password: formulario.value.password,
+      email: (formulario.value.email || '').trim().toLowerCase(),
+      password: (formulario.value.password || '').trim(),
       rol: formulario.value.rol,
     });
 
