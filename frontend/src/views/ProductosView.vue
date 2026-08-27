@@ -44,6 +44,14 @@ const columnas = [
 const proveedoresOptions = computed(() => proveedores.value.map((p) => ({ label: p.nombre, value: p._id })));
 const categoriasOptions = computed(() => categorias.value.map((c) => ({ label: c.nombre, value: c.slug })));
 
+const extraerLista = (res) => {
+  if (!res) return [];
+  if (Array.isArray(res)) return res;
+  if (Array.isArray(res.data)) return res.data;
+  if (Array.isArray(res.data?.data)) return res.data.data;
+  return [];
+};
+
 const cargar = async () => {
   cargando.value = true;
   try {
@@ -53,9 +61,9 @@ const cargar = async () => {
       get('/proveedores'),
     ]);
 
-    productos.value = listaProductos.data || [];
-    categorias.value = listaCategorias || [];
-    proveedores.value = listaProveedores.data || [];
+    productos.value = extraerLista(listaProductos);
+    categorias.value = extraerLista(listaCategorias);
+    proveedores.value = extraerLista(listaProveedores);
     general.marcarSincronizacion();
   } catch (e) {
     notificarError(e);
@@ -177,46 +185,47 @@ const eliminarProducto = async (producto) => {
   </q-page>
 
   <q-dialog v-model="dialogo" persistent>
-    <q-card style="min-width: 600px; max-width: 90vw;">
-      <q-card-section class="bg-primary text-white">
-        <div class="text-h6">{{ editando ? 'Editar producto' : 'Nuevo producto' }}</div>
+    <q-card style="width: 650px; max-width: 95vw; border-radius: 16px;">
+      <q-card-section class="bg-primary text-white row items-center justify-between">
+        <div class="text-h6 text-weight-bold">{{ editando ? 'Editar Producto' : 'Nuevo Producto' }}</div>
+        <q-btn flat round dense icon="close" v-close-popup />
       </q-card-section>
 
-      <q-card-section class="q-gutter-md">
-        <div class="row q-col-gutter-md">
-          <div class="col-12 col-md-6">
-            <q-input v-model="formulario.sku" outlined dense label="SKU" />
+      <q-card-section class="q-pt-md">
+        <div class="row q-col-gutter-sm">
+          <div class="col-12 col-md-6 q-mb-xs">
+            <q-input v-model="formulario.sku" outlined dense label="SKU *" />
           </div>
-          <div class="col-12 col-md-6">
-            <q-input v-model="formulario.nombre" outlined dense label="Nombre" />
+          <div class="col-12 col-md-6 q-mb-xs">
+            <q-input v-model="formulario.nombre" outlined dense label="Nombre del Producto *" />
           </div>
-          <div class="col-12 col-md-4">
-            <q-input v-model.number="formulario.precio" outlined dense label="Precio" type="number" />
+          <div class="col-12 col-md-4 q-mb-xs">
+            <q-input v-model.number="formulario.precio" outlined dense label="Precio ($) *" type="number" />
           </div>
-          <div class="col-12 col-md-4">
-            <q-input v-model.number="formulario.stock" outlined dense label="Stock" type="number" />
+          <div class="col-12 col-md-4 q-mb-xs">
+            <q-input v-model.number="formulario.stock" outlined dense label="Stock *" type="number" />
           </div>
-          <div class="col-12 col-md-4">
-            <q-select v-model="formulario.disponible" :options="[{label:'Disponible', value:true},{label:'No disponible', value:false}]" emit-value map-options outlined dense label="Disponibilidad" />
+          <div class="col-12 col-md-4 q-mb-xs">
+            <q-select v-model="formulario.disponible" :options="[{label:'Disponible', value:true},{label:'No disponible', value:false}]" emit-value map-options outlined dense label="Estado" />
           </div>
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-md-6 q-mb-xs">
             <q-select v-model="formulario.categoria" :options="categoriasOptions" emit-value map-options outlined dense label="Categoría" />
           </div>
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-md-6 q-mb-xs">
             <q-select v-model="formulario.proveedorId" :options="proveedoresOptions" emit-value map-options outlined dense label="Proveedor" />
           </div>
-          <div class="col-12">
-            <q-input v-model="formulario.descripcion" outlined dense type="textarea" autogrow label="Descripción" />
+          <div class="col-12 q-mb-xs">
+            <q-input v-model="formulario.descripcion" outlined dense type="textarea" rows="2" label="Descripción" />
           </div>
           <div class="col-12">
-            <q-input v-model="formulario.imagenUrl" outlined dense label="URL de imagen" />
+            <q-input v-model="formulario.imagenUrl" outlined dense label="URL de Imagen (Opcional)" />
           </div>
         </div>
       </q-card-section>
 
-      <q-card-actions align="right">
+      <q-card-actions align="right" class="bg-grey-1 q-pa-md">
         <q-btn flat label="Cancelar" color="grey-8" v-close-popup />
-        <q-btn unelevated label="Guardar" color="primary" :loading="guardando" @click="guardar" />
+        <q-btn unelevated label="Guardar" color="primary" class="text-weight-bold" :loading="guardando" @click="guardar" />
       </q-card-actions>
     </q-card>
   </q-dialog>

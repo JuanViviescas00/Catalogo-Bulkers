@@ -17,6 +17,14 @@ const buscador = ref('');
 const soloDisponibles = ref(false);
 const cargando = ref(false);
 
+const extraerLista = (res) => {
+  if (!res) return [];
+  if (Array.isArray(res)) return res;
+  if (Array.isArray(res.data)) return res.data;
+  if (Array.isArray(res.data?.data)) return res.data.data;
+  return [];
+};
+
 const cargar = async () => {
   cargando.value = true;
   try {
@@ -26,9 +34,9 @@ const cargar = async () => {
       get('/proveedores'),
     ]);
 
-    productos.value = resProductos.data || [];
-    categorias.value = resCategorias || [];
-    proveedores.value = resProveedores.data || [];
+    productos.value = extraerLista(resProductos);
+    categorias.value = extraerLista(resCategorias);
+    proveedores.value = extraerLista(resProveedores);
     general.marcarSincronizacion();
   } catch (e) {
     notificarError(e);
@@ -51,7 +59,7 @@ const proveedoresOptions = computed(() => proveedores.value.map((p) => ({ label:
 
 const productosFiltrados = computed(() => {
   return productos.value.filter((producto) => {
-    const nombreCoincide = producto.nombre.toLowerCase().includes(buscador.value.toLowerCase());
+    const nombreCoincide = producto.nombre ? producto.nombre.toLowerCase().includes(buscador.value.toLowerCase()) : false;
     const categoriaCoincide = !categoriaSeleccionada.value || producto.categoria === categoriaSeleccionada.value;
     const proveedorCoincide = !proveedorSeleccionado.value || producto.proveedorId === proveedorSeleccionado.value;
     const disponibleCoincide = !soloDisponibles.value || !!producto.disponible;

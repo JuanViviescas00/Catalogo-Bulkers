@@ -81,20 +81,21 @@ const guardar = async () => {
   </q-page>
 
   <q-dialog v-model="dialogo" persistent>
-    <q-card style="min-width: 500px; max-width: 90vw;">
-      <q-card-section class="bg-primary text-white">
-        <div class="text-h6">Crear usuario</div>
+    <q-card style="width: 480px; max-width: 95vw; border-radius: 16px;">
+      <q-card-section class="bg-primary text-white row items-center justify-between">
+        <div class="text-h6 text-weight-bold">Crear Usuario</div>
+        <q-btn flat round dense icon="close" v-close-popup />
       </q-card-section>
 
-      <q-card-section class="q-gutter-md">
-        <q-input v-model="formulario.email" outlined dense label="Email" type="email" />
-        <q-input v-model="formulario.password" outlined dense label="Contraseña" type="password" />
-        <q-select v-model="formulario.rol" :options="[{label:'Usuario', value:'user'},{label:'Administrador', value:'admin'}]" emit-value map-options outlined dense label="Rol" />
+      <q-card-section class="q-pt-md q-gutter-y-sm">
+        <q-input v-model="formulario.email" outlined dense label="Email *" type="email" />
+        <q-input v-model="formulario.password" outlined dense label="Contraseña *" type="password" />
+        <q-select v-model="formulario.rol" :options="[{label:'Usuario Estándar', value:'user'},{label:'Administrador', value:'admin'}]" emit-value map-options outlined dense label="Rol del Usuario *" />
       </q-card-section>
 
-      <q-card-actions align="right">
+      <q-card-actions align="right" class="bg-grey-1 q-pa-md">
         <q-btn flat label="Cancelar" color="grey-8" v-close-popup />
-        <q-btn unelevated label="Guardar" color="primary" :loading="guardando" @click="guardar" />
+        <q-btn unelevated label="Guardar" color="primary" class="text-weight-bold" :loading="guardando" @click="guardar" />
       </q-card-actions>
     </q-card>
   </q-dialog>

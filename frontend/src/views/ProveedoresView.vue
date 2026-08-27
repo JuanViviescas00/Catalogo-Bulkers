@@ -32,11 +32,19 @@ const formulario = ref({
   logoUrl: '',
 });
 
+const extraerLista = (res) => {
+  if (!res) return [];
+  if (Array.isArray(res)) return res;
+  if (Array.isArray(res.data)) return res.data;
+  if (Array.isArray(res.data?.data)) return res.data.data;
+  return [];
+};
+
 const cargar = async () => {
   cargando.value = true;
   try {
     const respuesta = await get('/proveedores');
-    proveedores.value = respuesta.data || [];
+    proveedores.value = extraerLista(respuesta);
     general.marcarSincronizacion();
   } catch (e) {
     notificarError(e);
@@ -138,21 +146,22 @@ const cambiarEstado = async (proveedor) => {
   </q-page>
 
   <q-dialog v-model="dialogo" persistent>
-    <q-card style="min-width: 500px; max-width: 90vw;">
-      <q-card-section class="bg-primary text-white">
-        <div class="text-h6">{{ editando ? 'Editar proveedor' : 'Nuevo proveedor' }}</div>
+    <q-card style="width: 500px; max-width: 95vw; border-radius: 16px;">
+      <q-card-section class="bg-primary text-white row items-center justify-between">
+        <div class="text-h6 text-weight-bold">{{ editando ? 'Editar Proveedor' : 'Nuevo Proveedor' }}</div>
+        <q-btn flat round dense icon="close" v-close-popup />
       </q-card-section>
 
-      <q-card-section class="q-gutter-md">
-        <q-input v-model="formulario.nombre" outlined dense label="Nombre" />
-        <q-input v-model="formulario.slug" outlined dense label="Slug" />
-        <q-input v-model="formulario.contactoEmail" outlined dense label="Email de contacto" type="email" />
-        <q-input v-model="formulario.logoUrl" outlined dense label="URL de logo" />
+      <q-card-section class="q-pt-md q-gutter-y-sm">
+        <q-input v-model="formulario.nombre" outlined dense label="Nombre del Proveedor *" />
+        <q-input v-model="formulario.slug" outlined dense label="Slug (Identificador)" />
+        <q-input v-model="formulario.contactoEmail" outlined dense label="Email de Contacto" type="email" />
+        <q-input v-model="formulario.logoUrl" outlined dense label="URL del Logo (Opcional)" />
       </q-card-section>
 
-      <q-card-actions align="right">
+      <q-card-actions align="right" class="bg-grey-1 q-pa-md">
         <q-btn flat label="Cancelar" color="grey-8" v-close-popup />
-        <q-btn unelevated label="Guardar" color="primary" :loading="cargandoGuardar" @click="guardar" />
+        <q-btn unelevated label="Guardar" color="primary" class="text-weight-bold" :loading="cargandoGuardar" @click="guardar" />
       </q-card-actions>
     </q-card>
   </q-dialog>

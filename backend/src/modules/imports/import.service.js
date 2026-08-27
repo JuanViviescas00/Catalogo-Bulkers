@@ -39,7 +39,7 @@ const normalizarFila = (fila = {}) => {
   const filaNormalizada = {};
 
   Object.entries(fila).forEach(([clave, valor]) => {
-    const nombre = limpiarTexto(clave).toLowerCase();
+    const nombre = limpiarTexto(clave).toLowerCase().replace(/[^a-z0-9]/g, '');
     filaNormalizada[nombre] = typeof valor === 'string' ? valor.trim() : valor;
   });
 
@@ -49,20 +49,16 @@ const normalizarFila = (fila = {}) => {
 const inferirTipoRegistro = (registro = {}) => {
   const llaves = Object.keys(registro).map((key) => key.toLowerCase());
 
-  if (llaves.includes('precio') || llaves.includes('stock') || llaves.includes('sku')) {
+  if (llaves.some((k) => k.includes('precio') || k.includes('stock') || k.includes('sku') || k.includes('price'))) {
     return 'productos';
   }
 
-  if (llaves.includes('contactoemail') || llaves.includes('logourl')) {
+  if (llaves.some((k) => k.includes('email') || k.includes('logo') || k.includes('contacto'))) {
     return 'proveedores';
   }
 
-  if (llaves.includes('descripcion') || llaves.includes('imagenurl') || llaves.includes('categoria')) {
+  if (llaves.some((k) => k.includes('descripcion') || k.includes('imagen') || k.includes('categoria'))) {
     return 'categorias';
-  }
-
-  if (llaves.includes('slug')) {
-    return 'proveedores';
   }
 
   return 'productos';
@@ -91,14 +87,15 @@ const leerArchivoComoRegistros = async (rutaArchivo, nombreArchivo) => {
         if (Array.isArray(item)) return item;
         return [item];
       })
-      .filter((item) => item && typeof item === 'object');
+      .filter((item) => item && typeof item === 'object')
+      .map(normalizarFila);
   }
 
   const registros = [];
   await new Promise((resolve, reject) => {
     Readable.from([contenido])
-      .pipe(csv({ mapHeaders: ({ header }) => limpiarTexto(header).toLowerCase() }))
-      .on('data', (fila) => registros.push(normalizarFila(fila)))
+      .pipe(csv({ mapHeaders: ({ header }) => limpiarTexto(header).toLowerCase().replace(/[^a-z0-9]/g, '') }))
+      .on('data', (fila) => registros.push(fila))
       .on('end', resolve)
       .on('error', reject);
   });
@@ -110,7 +107,7 @@ const resolverProveedorPorValor = async (valor, fallbackId = null) => {
   const referencia = limpiarTexto(valor || fallbackId || '');
 
   if (!referencia) {
-    throw new AppError('No se especificó un proveedor válido para los productos', 400, 'MISSING_PROVEEDOR_ID');
+    throw new AppError('No se especificó un proveedor válido para la importación', 400, 'MISSING_PROVEEDOR_ID');
   }
 
   if (mongoose.Types.ObjectId.isValid(referencia)) {
@@ -136,12 +133,9 @@ const resolverProveedorPorValor = async (valor, fallbackId = null) => {
 };
 
 const crearCategoriaSiHaceFalta = async (nombreCategoria) => {
-  const nombre = limpiarTexto(nombreCategoria);
-  if (!nombre) {
-    throw new AppError('La categoría es obligatoria para cada producto', 400, 'CATEGORY_REQUIRED');
-  }
-
+  const nombre = limpiarTexto(nombreCategoria) || 'General';
   const slug = crearSlug(nombre);
+
   const categoriaExistente = await Categoria.findOne({ $or: [{ slug }, { nombre: new RegExp(`^${escaparRegex(nombre)}$`, 'i') }] });
 
   if (categoriaExistente) {
@@ -188,7 +182,11 @@ export class ImportService {
 
     try {
       const registros = await leerArchivoComoRegistros(archivo.path, archivo.originalname);
-      const resumen = await this.procesarRegistros(registros, tipoNormalizado, proveedorId);
+      job.total = registros.length;
+      await job.save();
+
+      // Procesamiento síncrono/asíncrono de registros
+      const resumen = await this.procesarRegistros(registros, tipoNormalizado, proveedorId, job._id);
 
       await repo.actualizarEstado(job._id, {
         estado: 'completed',
@@ -220,7 +218,7 @@ export class ImportService {
     }
   }
 
-  async procesarRegistros(registros, tipo = 'todos', proveedorId = null) {
+  async procesarRegistros(registros, tipo = 'todos', proveedorId = null, importJobId = null) {
     const grupos = {
       proveedores: [],
       categorias: [],
@@ -235,34 +233,43 @@ export class ImportService {
     });
 
     const tiposAProcesar = tipo === 'todos' ? ['proveedores', 'categorias', 'productos'] : [tipo];
-    const resumen = { total: 0, exitosos: 0, fallidos: 0, errores: [] };
+    const resumen = { total: registros.length, exitosos: 0, fallidos: 0, errores: [] };
+    let procesadosCount = 0;
 
     for (const tipoActual of tiposAProcesar) {
       const items = grupos[tipoActual] || [];
       for (const [index, item] of items.entries()) {
         const fila = index + 1;
+        procesadosCount += 1;
+
         try {
           if (tipoActual === 'proveedores') {
             await this.crearProveedorDesdeFila(item);
-          }
-
-          if (tipoActual === 'categorias') {
+          } else if (tipoActual === 'categorias') {
             await this.crearCategoriaDesdeFila(item);
-          }
-
-          if (tipoActual === 'productos') {
+          } else if (tipoActual === 'productos') {
             await this.crearProductoDesdeFila(item, proveedorId);
           }
 
-          resumen.total += 1;
           resumen.exitosos += 1;
         } catch (error) {
-          resumen.total += 1;
           resumen.fallidos += 1;
           resumen.errores.push({
             fila,
             tipo: tipoActual,
+            sku: item.sku || item.codigo || 'N/A',
             motivo: error.message,
+          });
+        }
+
+        // Actualizar progreso incremental en BD cada 5 ítems
+        if (importJobId && (procesadosCount % 5 === 0 || procesadosCount === resumen.total)) {
+          await repo.actualizarEstado(importJobId, {
+            total: resumen.total,
+            procesados: procesadosCount,
+            exitosos: resumen.exitosos,
+            fallidos: resumen.fallidos,
+            errores: resumen.errores,
           });
         }
       }
@@ -272,8 +279,7 @@ export class ImportService {
   }
 
   async crearProveedorDesdeFila(fila) {
-    const nombre = limpiarTexto(fila.nombre || fila.proveedor || fila.titulo);
-    const slug = limpiarTexto(fila.slug || fila.identificador || crearSlug(nombre));
+    const nombre = limpiarTexto(fila.nombre || fila.proveedor || fila.titulo || fila.name);
     const email = limpiarTexto(fila.contactoemail || fila.email || fila.contactoEmail || '');
     const logoUrl = limpiarTexto(fila.logourl || fila.logo || fila.logoUrl || '');
 
@@ -281,11 +287,14 @@ export class ImportService {
       throw new AppError('El nombre del proveedor es obligatorio', 400, 'PROVEEDOR_NAME_REQUIRED');
     }
 
-    const slugNormalizado = crearSlug(slug || nombre);
+    const slugNormalizado = crearSlug(fila.slug || nombre);
 
     const yaExiste = await Proveedor.findOne({ $or: [{ slug: slugNormalizado }, { nombre: new RegExp(`^${escaparRegex(nombre)}$`, 'i') }] });
     if (yaExiste) {
-      throw new AppError(`El proveedor '${nombre}' ya existe`, 409, 'PROVEEDOR_EXISTS');
+      yaExiste.contactoEmail = email || yaExiste.contactoEmail;
+      yaExiste.logoUrl = logoUrl || yaExiste.logoUrl;
+      yaExiste.activo = true;
+      return await yaExiste.save();
     }
 
     return await Proveedor.create({
@@ -298,15 +307,18 @@ export class ImportService {
   }
 
   async crearCategoriaDesdeFila(fila) {
-    const nombre = limpiarTexto(fila.nombre || fila.categoria || fila.titulo);
+    const nombre = limpiarTexto(fila.nombre || fila.categoria || fila.titulo || fila.name);
     if (!nombre) {
       throw new AppError('El nombre de la categoría es obligatorio', 400, 'CATEGORY_NAME_REQUIRED');
     }
 
     const slug = crearSlug(limpiarTexto(fila.slug) || nombre);
     const existe = await Categoria.findOne({ $or: [{ slug }, { nombre: new RegExp(`^${escaparRegex(nombre)}$`, 'i') }] });
+    
     if (existe) {
-      throw new AppError(`La categoría '${nombre}' ya existe`, 409, 'CATEGORY_EXISTS');
+      existe.descripcion = limpiarTexto(fila.descripcion || fila.detalle) || existe.descripcion;
+      existe.imagenUrl = limpiarTexto(fila.imagenurl || fila.imagenUrl) || existe.imagenUrl;
+      return await existe.save();
     }
 
     return await Categoria.create({
@@ -318,14 +330,14 @@ export class ImportService {
   }
 
   async crearProductoDesdeFila(fila, proveedorId = null) {
-    const sku = limpiarTexto(fila.sku || fila.codigo || fila.idproducto || '').toUpperCase();
-    const nombre = limpiarTexto(fila.nombre || fila.producto || fila.titulo);
+    const sku = limpiarTexto(fila.sku || fila.codigo || fila.idproducto || fila.id || '').toUpperCase();
+    const nombre = limpiarTexto(fila.nombre || fila.producto || fila.titulo || fila.name || `Producto ${sku}`);
     const precio = Number(fila.precio || fila.price || 0);
     const stock = Number(fila.stock || fila.inventory || 0);
-    const categoriaNombre = limpiarTexto(fila.categoria || fila.categoriaslug || fila.categoriaNombre || '');
+    const categoriaNombre = limpiarTexto(fila.categoria || fila.categoriaslug || fila.categoriaNombre || 'General');
 
     if (!sku) {
-      throw new AppError('El SKU es obligatorio', 400, 'SKU_REQUIRED');
+      throw new AppError('El SKU es obligatorio para cada producto', 400, 'SKU_REQUIRED');
     }
 
     if (!nombre) {
@@ -340,19 +352,25 @@ export class ImportService {
       throw new AppError('El stock del producto es inválido', 400, 'INVALID_STOCK');
     }
 
-    const skuExistente = await Producto.findOne({ sku });
-    if (skuExistente) {
-      throw new AppError(`El SKU '${sku}' ya existe`, 409, 'SKU_EXISTS');
-    }
-
-    const proveedor = await resolverProveedorPorValor(fila.proveedorId || fila.proveedor || fila.proveedorid || proveedorId, proveedorId);
-    if (!proveedor.activo) {
-      throw new AppError('El proveedor se encuentra inactivo y no puede recibir productos', 409, 'PROVEEDOR_INACTIVE');
-    }
-
+    const proveedor = await resolverProveedorPorValor(fila.proveedorid || fila.proveedor || fila.proveedornombre || proveedorId, proveedorId);
     const categoria = await crearCategoriaSiHaceFalta(categoriaNombre);
-
     const disponible = normalizarBooleano(fila.disponible, stock > 0);
+
+    // UPSERT: Si el SKU ya existe, actualizar; si no, crear nuevo
+    const productoExistente = await Producto.findOne({ sku });
+
+    if (productoExistente) {
+      productoExistente.nombre = nombre;
+      productoExistente.precio = precio;
+      productoExistente.stock = stock;
+      productoExistente.categoria = categoria.slug;
+      productoExistente.descripcion = limpiarTexto(fila.descripcion || fila.detalle) || productoExistente.descripcion;
+      productoExistente.imagenUrl = limpiarTexto(fila.imagenurl || fila.imagenUrl) || productoExistente.imagenUrl;
+      productoExistente.proveedorId = proveedor._id;
+      productoExistente.disponible = disponible;
+      productoExistente.activo = true;
+      return await productoExistente.save();
+    }
 
     return await Producto.create({
       sku,
@@ -364,7 +382,7 @@ export class ImportService {
       imagenUrl: limpiarTexto(fila.imagenurl || fila.imagenUrl || ''),
       proveedorId: proveedor._id,
       disponible,
-      activo: normalizarBooleano(fila.activo, true),
+      activo: true,
     });
   }
 

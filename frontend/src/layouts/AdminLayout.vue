@@ -20,21 +20,22 @@ const salir = () => {
 
 const opcionesMenu = [
   { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront' },
-  { name: 'importacion', titulo: 'Importación', icono: 'upload_file' },
+  { name: 'productos', titulo: 'Productos', icono: 'inventory_2' },
   { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping' },
   { name: 'categorias', titulo: 'Categorías', icono: 'category' },
-  { name: 'productos', titulo: 'Productos', icono: 'inventory_2' },
   { name: 'usuarios', titulo: 'Usuarios', icono: 'people' },
+  { name: 'imports', titulo: 'Importación Masiva', icono: 'cloud_upload' },
+  { name: 'acerca', titulo: 'Documentación', icono: 'info' },
 ];
 
-const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
+const tituloSeccion = computed(() => route.meta?.titulo || 'CatálogoBulk');
 </script>
 
 <template>
   <q-layout view="lHh Lpr lFf" class="admin-layout">
     <q-header elevated class="admin-header text-white">
       <q-toolbar class="admin-toolbar">
-        <q-btn flat dense round icon="menu" aria-label="Abrir menu" @click="general.alternarMenu()" class="admin-menu-btn" />
+        <q-btn flat dense round icon="menu" aria-label="Abrir menú" @click="general.alternarMenu()" class="admin-menu-btn" />
         <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
 
         <template v-if="auth.estaAutenticado">
@@ -49,7 +50,7 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
     </q-header>
 
     <q-drawer v-model="general.menuAbierto" show-if-above bordered :width="248" class="admin-drawer">
-      <div class="admin-drawer__brand">
+      <div class="admin-drawer__brand cursor-pointer" @click="router.push('/')">
         <img :src="logo" alt="Logo" width="34" height="34" class="q-mr-sm" />
         <div class="text-weight-bold">{{ general.titulo }}</div>
       </div>
@@ -57,7 +58,7 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
       <q-separator />
 
       <q-list padding>
-        <q-item-label header class="text-uppercase text-caption text-weight-bold admin-menu-label">Menú</q-item-label>
+        <q-item-label header class="text-uppercase text-caption text-weight-bold admin-menu-label">Navegación</q-item-label>
 
         <q-item
           v-for="opcion in opcionesMenu"
