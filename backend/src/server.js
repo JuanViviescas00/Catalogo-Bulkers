@@ -11,9 +11,9 @@ const startServer = async () => {
     // Sembrar usuario administrador por defecto si no existe
     await sembrarAdmin();
 
-    // Arrancar el servidor Express
-    app.listen(env.PORT, () => {
-      console.log(`[Servidor] Escuchando en http://localhost:${env.PORT}`);
+    // Arrancar el servidor Express escuchando en todas las interfaces de red (0.0.0.0)
+    app.listen(env.PORT, '0.0.0.0', () => {
+      console.log(`[Servidor] Escuchando en http://0.0.0.0:${env.PORT} (Acceso local y en red)`);
     });
   } catch (error) {
     console.error('[Servidor] Error crítico al iniciar:', error.message);
