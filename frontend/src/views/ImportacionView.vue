@@ -13,9 +13,9 @@ const historial = ref([]);
 
 const opcionesTipo = [
   { label: 'Todo el catálogo', value: 'todos' },
-  { label: 'Solo proveedores', value: 'proveedores' },
-  { label: 'Solo categorías', value: 'categorias' },
-  { label: 'Solo productos', value: 'productos' },
+  { label: 'Proveedores', value: 'proveedores' },
+  { label: 'Categorías', value: 'categorias' },
+  { label: 'roductos', value: 'productos' },
 ];
 
 const cargarHistorial = async () => {

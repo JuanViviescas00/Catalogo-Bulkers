@@ -1,4 +1,4 @@
-<script setup>
+frontend/src/views/CursosView.vue<script setup>
 /**
  * /views/CursosView.vue
  * CRUD completo de cursos contra el backend de practica.
