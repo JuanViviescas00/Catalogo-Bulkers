@@ -83,8 +83,25 @@ const iniciarSesion = async () => {
               </q-input>
             </q-card-section>
 
-            <q-card-actions class="q-px-md q-pb-md">
-              <q-btn unelevated no-caps type="submit" color="primary" class="full-width login-btn" label="Iniciar sesión" :loading="enviando" />
+            <q-card-actions class="q-px-md q-pb-md column q-gutter-y-xs">
+              <q-btn
+                unelevated
+                no-caps
+                type="submit"
+                color="primary"
+                class="full-width login-btn"
+                label="Iniciar Sesión"
+                :loading="enviando"
+              />
+              <q-btn
+                flat
+                no-caps
+                color="primary"
+                icon="arrow_back"
+                label="Volver al Catálogo"
+                to="/"
+                class="full-width q-mt-xs text-weight-bold"
+              />
             </q-card-actions>
           </q-form>
         </q-card>
