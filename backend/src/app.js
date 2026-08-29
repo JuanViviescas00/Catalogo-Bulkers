@@ -12,7 +12,11 @@ const app = express();
 
 app.use(cors({
   origin: (origin, callback) => {
-    const permitido = !origin || /^http:\/\/localhost:\d+$/.test(origin) || /^http:\/\/127\.0\.0\.1:\d+$/.test(origin);
+    const permitido = !origin ||
+      /^http:\/\/localhost:\d+$/.test(origin) ||
+      /^http:\/\/127\.0\.0\.1:\d+$/.test(origin) ||
+      /^https?:\/\/.*\.vercel\.app$/.test(origin) ||
+      /^http:\/\/192\.168\.\d+\.\d+:\d+$/.test(origin);
     callback(null, permitido);
   },
   credentials: true,
