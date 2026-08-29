@@ -83,10 +83,6 @@ const iniciarSesion = async () => {
               </q-input>
             </q-card-section>
 
-<<<<<<< HEAD
-            <q-card-actions class="q-px-md q-pb-md">
-              <q-btn unelevated no-caps type="submit" color="primary" class="full-width login-btn" label="Iniciar sesión" :loading="enviando" />
-=======
             <q-card-actions class="q-px-md q-pb-md column q-gutter-y-xs">
               <q-btn
                 unelevated
@@ -106,7 +102,6 @@ const iniciarSesion = async () => {
                 to="/"
                 class="full-width q-mt-xs text-weight-bold"
               />
->>>>>>> 5310db2 (arreglo login)
             </q-card-actions>
           </q-form>
         </q-card>
