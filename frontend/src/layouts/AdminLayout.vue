@@ -113,16 +113,7 @@ const salir = () => {
     </q-drawer>
 
     <q-page-container>
-      <router-view v-slot="{ Component }">
-        <transition
-          appear
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          mode="out-in"
-        >
-          <component :is="Component" />
-        </transition>
-      </router-view>
+      <router-view :key="route.fullPath" />
     </q-page-container>
   </q-layout>
 </template>

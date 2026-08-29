@@ -106,25 +106,25 @@ const guardar = async () => {
         </template>
       </TablaDatos>
     </div>
+
+    <q-dialog v-model="dialogo" persistent>
+      <q-card style="width: 500px; max-width: 95vw; border-radius: 16px;">
+        <q-card-section class="bg-primary text-white row items-center justify-between">
+          <div class="text-h6 text-weight-bold">{{ seleccion ? 'Editar Categoría' : 'Nueva Categoría' }}</div>
+          <q-btn flat round dense icon="close" v-close-popup />
+        </q-card-section>
+
+        <q-card-section class="q-pt-md q-gutter-y-sm">
+          <q-input v-model="formulario.nombre" outlined dense label="Nombre de la Categoría *" />
+          <q-input v-model="formulario.descripcion" outlined dense type="textarea" rows="2" label="Descripción" />
+          <q-input v-model="formulario.imagenUrl" outlined dense label="URL de Imagen (Opcional)" />
+        </q-card-section>
+
+        <q-card-actions align="right" class="bg-grey-1 q-pa-md">
+          <q-btn flat label="Cancelar" color="grey-8" v-close-popup />
+          <q-btn unelevated label="Guardar" color="primary" class="text-weight-bold" :loading="guardando" @click="guardar" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
-
-  <q-dialog v-model="dialogo" persistent>
-    <q-card style="width: 500px; max-width: 95vw; border-radius: 16px;">
-      <q-card-section class="bg-primary text-white row items-center justify-between">
-        <div class="text-h6 text-weight-bold">{{ seleccion ? 'Editar Categoría' : 'Nueva Categoría' }}</div>
-        <q-btn flat round dense icon="close" v-close-popup />
-      </q-card-section>
-
-      <q-card-section class="q-pt-md q-gutter-y-sm">
-        <q-input v-model="formulario.nombre" outlined dense label="Nombre de la Categoría *" />
-        <q-input v-model="formulario.descripcion" outlined dense type="textarea" rows="2" label="Descripción" />
-        <q-input v-model="formulario.imagenUrl" outlined dense label="URL de Imagen (Opcional)" />
-      </q-card-section>
-
-      <q-card-actions align="right" class="bg-grey-1 q-pa-md">
-        <q-btn flat label="Cancelar" color="grey-8" v-close-popup />
-        <q-btn unelevated label="Guardar" color="primary" class="text-weight-bold" :loading="guardando" @click="guardar" />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
 </template>
