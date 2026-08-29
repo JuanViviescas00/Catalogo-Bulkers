@@ -29,8 +29,10 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Catálogo');
 
 const salir = () => {
   auth.clearSession();
-  router.push({ name: 'login' });
+  window.location.href = '#/login';
+  window.location.reload();
 };
+
 </script>
 
 <template>
