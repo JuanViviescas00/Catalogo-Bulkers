@@ -61,7 +61,7 @@ const productosFiltrados = computed(() => {
 </script>
 
 <template>
-  <div class="contenedor-app q-pa-md">
+  <q-page class="contenedor-app q-pa-md">
     <div class="catalog-frame">
       <header class="catalog-header">
         <div class="catalog-header__left">
@@ -152,5 +152,5 @@ const productosFiltrados = computed(() => {
         </main>
       </div>
     </div>
-  </div>
+  </q-page>
 </template>
