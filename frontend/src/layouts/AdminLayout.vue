@@ -40,7 +40,7 @@ const salir = () => {
     localStorage.clear();
     sessionStorage.clear();
     // Redirige directamente al catálogo público en lugar del login
-    window.location.hash = '#/catalogo';
+    window.location.hash = '#/';
     window.location.reload();
   }
 };
@@ -113,16 +113,7 @@ const salir = () => {
     </q-drawer>
 
     <q-page-container>
-      <router-view v-slot="{ Component }">
-        <transition
-          appear
-          enter-active-class="animated fadeIn"
-          leave-active-class="animated fadeOut"
-          mode="out-in"
-        >
-          <component :is="Component" />
-        </transition>
-      </router-view>
+      <router-view :key="route.fullPath" />
     </q-page-container>
   </q-layout>
 </template>

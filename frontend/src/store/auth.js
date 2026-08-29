@@ -84,10 +84,6 @@ export const useAuthStore = defineStore(
       cerrarSesion();
     }
 
-    function clearSession() {
-      cerrarSesion();
-    }
-
     return {
       token,
       usuario,
@@ -104,7 +100,6 @@ export const useAuthStore = defineStore(
       registrar,
       cerrarSesion,
       logout,
-      clearSession,
     };
   },
   { persist: true }
