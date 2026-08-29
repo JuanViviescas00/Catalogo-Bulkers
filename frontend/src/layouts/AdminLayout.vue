@@ -1,33 +1,36 @@
 <script setup>
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useGeneralStore } from '@/store/General';
 import { useAuthStore } from '@/store/Auth';
-import { useNotificar } from '@/composables/useNotificar';
+import { useGeneralStore } from '@/store/General';
 import logo from '@/assets/logo.svg';
 
-const general = useGeneralStore();
-const auth = useAuthStore();
 const route = useRoute();
 const router = useRouter();
-const { notificarInfo } = useNotificar();
+const auth = useAuthStore();
+const general = useGeneralStore();
 
-const salir = () => {
-  auth.cerrarSesion();
-  notificarInfo('Sesión cerrada');
-  router.push({ name: 'login' });
-};
-
-const opcionesMenu = [
-  { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront' },
-  { name: 'importacion', titulo: 'Importación', icono: 'upload_file' },
-  { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping' },
-  { name: 'categorias', titulo: 'Categorías', icono: 'category' },
-  { name: 'productos', titulo: 'Productos', icono: 'inventory_2' },
-  { name: 'usuarios', titulo: 'Usuarios', icono: 'people' },
+const todasLasOpciones = [
+  { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront', soloAdmin: false },
+  { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping', soloAdmin: true },
+  { name: 'categorias', titulo: 'Categorías', icono: 'category', soloAdmin: true },
+  { name: 'productos', titulo: 'Productos', icono: 'inventory_2', soloAdmin: true },
+  { name: 'usuarios', titulo: 'Usuarios', icono: 'people', soloAdmin: true },
 ];
 
-const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
+const opcionesMenu = computed(() => {
+  if (auth.rol === 'admin') {
+    return todasLasOpciones;
+  }
+  return todasLasOpciones.filter((op) => !op.soloAdmin);
+});
+
+const tituloSeccion = computed(() => route.meta?.titulo || 'Catálogo');
+
+const salir = () => {
+  auth.clearSession();
+  router.push({ name: 'login' });
+};
 </script>
 
 <template>
@@ -52,8 +55,6 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
             <q-tooltip>Cerrar sesión</q-tooltip>
           </q-btn>
         </template>
-
-        <q-btn v-else flat dense no-caps icon="login" label="Entrar" :to="{ name: 'login' }" class="admin-action-btn" />
       </q-toolbar>
     </q-header>
 
