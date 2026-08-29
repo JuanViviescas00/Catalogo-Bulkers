@@ -24,11 +24,17 @@ const iniciarSesion = async () => {
       password: (formulario.value.password || '').trim(),
     });
 
-    auth.guardarSesion(respuesta);
-    notificarOk(`Bienvenido`);
+    // 1. Usar el método correcto del store (setSession en lugar de guardarSesion)
+    auth.setSession(respuesta);
+
+    notificarOk('Bienvenido');
+
+    // 2. Redirigir al catálogo
     router.push({ name: 'catalogo' });
   } catch (e) {
-    notificarError(e);
+    // 3. Pasar el mensaje de error o el objeto capturado
+    const mensajeError = e.response?.data?.mensaje || e.mensaje || e.message || e;
+    notificarError(mensajeError);
   } finally {
     enviando.value = false;
   }

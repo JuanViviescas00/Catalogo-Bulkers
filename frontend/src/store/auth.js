@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import apiService from '@/services/api.service';
-
+import { post } from '@/services/api.service';
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -40,29 +39,28 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async login(credenciales) {
-      this.cargando = true;
-      try {
-        const respuesta = await apiService.post('/auth/login', credenciales);
-        if (respuesta.data && respuesta.data.token) {
-          this.setSession({ token: respuesta.data.token });
-        }
-        return respuesta.data;
-      } finally {
-        this.cargando = false;
-      }
-    },
+ async login(credenciales) {
+  this.cargando = true;
+  try {
+    const respuesta = await post('/auth/login', credenciales);
+    if (respuesta && respuesta.token) {
+      this.setSession({ token: respuesta.token });
+    }
+    return respuesta;
+  } finally {
+    this.cargando = false;
+  }
+},
 
-    async registrar(datosUsuario) {
-      this.cargando = true;
-      try {
-        const respuesta = await apiService.post('/auth/register', datosUsuario);
-        return respuesta.data;
-      } finally {
-        this.cargando = false;
-      }
-    },
-
+async registrar(datosUsuario) {
+  this.cargando = true;
+  try {
+    const respuesta = await post('/auth/register', datosUsuario);
+    return respuesta;
+  } finally {
+    this.cargando = false;
+  }
+},
     logout() {
       this.token = null;
       this.user = null;

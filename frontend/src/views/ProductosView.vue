@@ -175,11 +175,26 @@ const eliminarProducto = async (producto) => {
         </template>
 
         <template #body-cell-acciones="slotProps">
-          <q-td :props="slotProps" class="text-right">
-            <q-btn flat dense round size="sm" icon="edit" color="primary" @click="abrirEdicion(slotProps.row)" />
-            <q-btn flat dense round size="sm" icon="delete" color="negative" @click="eliminarProducto(slotProps.row)" />
-          </q-td>
-        </template>
+  <q-td :props="slotProps" class="text-right q-gutter-x-xs">
+    <q-btn 
+      flat 
+      round 
+      size="md" 
+      icon="edit" 
+      color="primary" 
+      @click="abrirEdicion(slotProps.row)" 
+    />
+    <q-btn 
+      flat 
+      round 
+      size="md" 
+      icon="delete" 
+      color="negative" 
+      @click="eliminarProducto(slotProps.row)" 
+    />
+  </q-td>
+</template>
+
       </TablaDatos>
     </div>
   </q-page>

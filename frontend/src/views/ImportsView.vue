@@ -17,19 +17,37 @@
           </q-card-section>
 
           <q-card-section class="q-gutter-y-md">
+            <!-- SELECTOR DE TIPO DE ENTIDAD -->
             <q-select
+              v-model="tipoEntidad"
+              :options="tiposEntidades"
+              option-label="label"
+              option-value="value"
+              emit-value
+              map-options
+              label="Tipo de Importación *"
+              outlined
+              dense
+              hint="Selecciona la entidad a importar"
+            />
+
+            <!-- SELECTOR DE PROVEEDOR (SOLO VISIBLE SI ES IMPORTACIÓN DE PRODUCTOS) -->
+            <q-select
+              v-if="tipoEntidad === 'productos'"
               v-model="proveedorSeleccionado"
               :options="proveedores"
               option-label="nombre"
               option-value="_id"
               emit-value
               map-options
+              clearable
               label="Seleccionar Proveedor *"
               outlined
               dense
               hint="Los productos importados se vincularán a este proveedor"
             />
 
+            <!-- CARGA DE ARCHIVO -->
             <q-file
               v-model="archivoAdjunto"
               label="Archivo del Catálogo (.csv o .json) *"
@@ -42,6 +60,7 @@
               </template>
             </q-file>
 
+            <!-- BOTÓN DE ENVÍO CON VALIDACIÓN DINÁMICA -->
             <q-btn
               label="Iniciar Importación"
               icon="cloud_upload"
@@ -49,7 +68,7 @@
               class="full-width text-weight-bold"
               size="lg"
               :loading="subiendo"
-              :disable="!proveedorSeleccionado || !archivoAdjunto"
+              :disable="!archivoAdjunto || !tipoEntidad || (tipoEntidad === 'productos' && !proveedorSeleccionado)"
               @click="enviarImportacion"
             />
           </q-card-section>
@@ -139,10 +158,18 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useQuasar } from 'quasar';
-import apiService from '@/services/api.service';
+import { get, postForm } from '@/services/api.service';
 
 const $q = useQuasar();
 
+// Opciones de tipo de entidad
+const tiposEntidades = [
+  { label: 'Productos', value: 'productos' },
+  { label: 'Categorías', value: 'categorias' },
+  { label: 'Proveedores', value: 'proveedores' },
+];
+
+const tipoEntidad = ref('productos');
 const proveedores = ref([]);
 const proveedorSeleccionado = ref(null);
 const archivoAdjunto = ref(null);
@@ -153,13 +180,12 @@ let timerPoll = null;
 
 async function cargarProveedores() {
   try {
-    const res = await apiService.get('/proveedores');
+    const res = await get('/proveedores');
     const lista = Array.isArray(res) ? res : res.data || [];
     proveedores.value = lista.filter((p) => p.activo !== false);
 
-    if (proveedores.value.length > 0) {
-      proveedorSeleccionado.value = proveedores.value[0]._id;
-    }
+    // Dejamos en null para permitir libre selección
+    proveedorSeleccionado.value = null;
   } catch (e) {
     console.error('Error al cargar proveedores:', e);
   }
@@ -169,12 +195,15 @@ async function enviarImportacion() {
   subiendo.value = true;
   try {
     const formData = new FormData();
-    formData.append('proveedorId', proveedorSeleccionado.value);
+    formData.append('tipoEntidad', tipoEntidad.value);
     formData.append('archivo', archivoAdjunto.value);
 
-    const res = await apiService.post('/imports', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
+    if (tipoEntidad.value === 'productos' && proveedorSeleccionado.value) {
+      formData.append('proveedorId', proveedorSeleccionado.value);
+    }
+
+    // Petición al backend enviando el tipo de entidad
+    const res = await postForm('/imports', formData);
 
     $q.notify({
       type: 'positive',
@@ -204,7 +233,7 @@ function iniciarPolling(jobId) {
 
 async function consultarJob(jobId) {
   try {
-    const res = await apiService.get(`/imports/${jobId}`);
+    const res = await get(`/imports/${jobId}`);
     jobActual.value = res.data || res;
 
     if (['completed', 'failed'].includes(jobActual.value.estado)) {
