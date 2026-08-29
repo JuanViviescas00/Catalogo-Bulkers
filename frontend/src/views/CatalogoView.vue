@@ -81,7 +81,7 @@ const productosFiltrados = computed(() => {
           <div class="catalog-body">
             <div class="catalog-filters section-box">
               <div class="section-box__title">Filtros</div>
-              <div class="q-pa-md q-gutter-md">
+              <div class="catalog-filters__body">
                 <q-input v-model="buscador" outlined dense clearable label="Buscar producto" prepend-icon="search" />
 
                 <q-select
