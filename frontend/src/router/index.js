@@ -15,10 +15,21 @@ import NotFoundView from '@/views/NotFoundView.vue';
 const routes = [
   {
     path: '/',
-    name: 'catalogo',
-    alias: ['/catalogo'],
-    component: CatalogoView,
-    meta: { titulo: 'Catálogo' },
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        name: 'catalogo',
+        alias: ['catalogo'],
+        component: CatalogoView,
+        meta: { titulo: 'Catálogo' },
+      },
+      { path: 'importacion', name: 'importacion', component: ImportacionView, meta: { titulo: 'Importación masiva', requiereAuth: true } },
+      { path: 'proveedores', name: 'proveedores', component: ProveedoresView, meta: { titulo: 'Proveedores', requiereAuth: true } },
+      { path: 'categorias', name: 'categorias', component: CategoriasView, meta: { titulo: 'Categorías', requiereAuth: true } },
+      { path: 'productos', name: 'productos', component: ProductosView, meta: { titulo: 'Productos', requiereAuth: true } },
+      { path: 'usuarios', name: 'usuarios', component: UsuariosView, meta: { titulo: 'Usuarios', requiereAuth: true } },
+    ],
   },
   {
     path: '/login',
@@ -27,18 +38,7 @@ const routes = [
     alias: ['/admin/login'],
     meta: { titulo: 'Iniciar sesión', soloInvitados: true },
   },
-  {
-    path: '/admin',
-    component: AdminLayout,
-    children: [
-      { path: 'importacion', name: 'importacion', component: ImportacionView, meta: { titulo: 'Importación masiva', requiereAuth: true } },
-      { path: 'proveedores', name: 'proveedores', component: ProveedoresView, meta: { titulo: 'Proveedores', requiereAuth: true } },
-      { path: 'categorias', name: 'categorias', component: CategoriasView, meta: { titulo: 'Categorías', requiereAuth: true } },
-      { path: 'productos', name: 'productos', component: ProductosView, meta: { titulo: 'Productos', requiereAuth: true } },
-      { path: 'usuarios', name: 'usuarios', component: UsuariosView, meta: { titulo: 'Usuarios', requiereAuth: true } },
-      { path: ':pathMatch(.*)*', name: 'no-encontrado', component: NotFoundView, meta: { titulo: 'Página no encontrada' } },
-    ],
-  },
+  { path: '/:pathMatch(.*)*', name: 'no-encontrado', component: NotFoundView, meta: { titulo: 'Página no encontrada' } },
 ];
 
 export const router = createRouter({
@@ -50,17 +50,13 @@ export const router = createRouter({
 function protegerRutas(to) {
   const auth = useAuthStore();
 
-  if (to.name === 'catalogo' && auth.estaAutenticado) {
-    return { name: 'proveedores' };
-  }
-
   if (to.meta.requiereAuth === true && !auth.estaAutenticado) {
     Notify.create({ type: 'negative', message: 'Debes iniciar sesión para entrar a esa página', icon: 'lock', position: 'top-right' });
     return { name: 'login' };
   }
 
   if (to.meta.soloInvitados === true && auth.estaAutenticado) {
-    return { name: 'proveedores' };
+    return { name: 'catalogo' };
   }
 
   return true;
