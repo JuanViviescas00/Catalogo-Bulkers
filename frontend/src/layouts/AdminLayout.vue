@@ -40,7 +40,7 @@ const salir = () => {
     localStorage.clear();
     sessionStorage.clear();
     // Redirige directamente al catálogo público en lugar del login
-    window.location.hash = '#/catalogo';
+    window.location.hash = '#/';
     window.location.reload();
   }
 };
