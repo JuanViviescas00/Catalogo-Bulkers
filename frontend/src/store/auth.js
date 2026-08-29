@@ -8,11 +8,11 @@ export const useAuthStore = defineStore('auth', {
     cargando: false,
   }),
 
-  getters: {
-    estaAutenticado: (state) => !!state.token,
-    esAdmin: (state) => state.rol === 'admin',
-    obtenerUsuario: (state) => state.user,
-  },
+ getters: {
+  estaAutenticado: (state) => !!state.token && state.token !== 'null',
+  esAdmin: (state) => state.rol === 'admin',
+  obtenerUsuario: (state) => state.user,
+},
 
   actions: {
     setSession(data) {
@@ -39,14 +39,21 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
- async login(credenciales) {
+async login(credenciales) {
   this.cargando = true;
   try {
     const respuesta = await post('/auth/login', credenciales);
-    if (respuesta && respuesta.token) {
-      this.setSession({ token: respuesta.token });
+    
+    // Si la API devuelve { token, usuario } o { data: { token, usuario } }
+    const datos = respuesta.data || respuesta;
+    
+    if (datos && datos.token) {
+      this.setSession(datos);
     }
-    return respuesta;
+    return datos;
+  } catch (error) {
+    console.error('Error en login:', error);
+    throw error;
   } finally {
     this.cargando = false;
   }
