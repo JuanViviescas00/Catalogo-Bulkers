@@ -1,79 +1,108 @@
+import { computed, ref } from 'vue';
 import { defineStore } from 'pinia';
 import apiService from '@/services/api.service';
 
-export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    user: JSON.parse(localStorage.getItem('user')) || null,
-    token: localStorage.getItem('token') || null,
-    rol: localStorage.getItem('rol') || null,
-    cargando: false,
-  }),
+export const useAuthStore = defineStore(
+  'auth',
+  () => {
+    const token = ref(localStorage.getItem('token') || null);
+    const usuario = ref(JSON.parse(localStorage.getItem('user') || 'null'));
+    const user = usuario;
+    const rol = ref(localStorage.getItem('rol') || 'user');
+    const cargando = ref(false);
 
-  getters: {
-    estaAutenticado: (state) => !!state.token,
-    esAdmin: (state) => state.rol === 'admin',
-    obtenerUsuario: (state) => state.user,
-  },
+    const estaAutenticado = computed(() => !!token.value);
+    const esAdmin = computed(() => rol.value === 'admin' || usuario.value?.rol === 'admin');
+    const nombreUsuario = computed(() => usuario.value?.nombre || usuario.value?.email || 'Usuario');
+    const obtenerUsuario = computed(() => usuario.value);
 
-  actions: {
-    setSession(data) {
+    function setSession(data) {
       if (data.token) {
-        this.token = data.token;
+        token.value = data.token;
         localStorage.setItem('token', data.token);
 
         try {
           const payloadBase64 = data.token.split('.')[1];
           const decoded = JSON.parse(atob(payloadBase64));
-          this.rol = decoded.rol || 'user';
-          this.user = { id: decoded.sub, email: decoded.email || '', rol: this.rol };
+          rol.value = decoded.rol || 'user';
+          usuario.value = { id: decoded.sub, email: decoded.email || '', rol: rol.value };
 
-          localStorage.setItem('rol', this.rol);
-          localStorage.setItem('user', JSON.stringify(this.user));
+          localStorage.setItem('rol', rol.value);
+          localStorage.setItem('user', JSON.stringify(usuario.value));
         } catch (e) {
           console.error('Error al decodificar JWT payload', e);
         }
       }
 
-      if (data.id && data.email) {
-        this.user = { id: data.id, email: data.email, rol: data.rol || this.rol };
-        localStorage.setItem('user', JSON.stringify(this.user));
+      if (data.usuario || data.user) {
+        usuario.value = data.usuario || data.user;
+        rol.value = usuario.value?.rol || rol.value;
+        localStorage.setItem('user', JSON.stringify(usuario.value));
+        localStorage.setItem('rol', rol.value);
       }
-    },
+    }
 
-    async login(credenciales) {
-      this.cargando = true;
+    function guardarSesion(respuesta) {
+      setSession(respuesta);
+    }
+
+    async function login(credenciales) {
+      cargando.value = true;
       try {
         const respuesta = await apiService.post('/auth/login', credenciales);
-        if (respuesta.data && respuesta.data.token) {
-          this.setSession({ token: respuesta.data.token });
+        const resData = respuesta?.data || respuesta;
+        if (resData && resData.token) {
+          setSession({ token: resData.token, user: resData.user || resData.usuario });
         }
-        return respuesta.data;
+        return resData;
       } finally {
-        this.cargando = false;
+        cargando.value = false;
       }
-    },
+    }
 
-    async registrar(datosUsuario) {
-      this.cargando = true;
+    async function registrar(datosUsuario) {
+      cargando.value = true;
       try {
         const respuesta = await apiService.post('/auth/register', datosUsuario);
-        return respuesta.data;
+        const resData = respuesta?.data || respuesta;
+        return resData;
       } finally {
-        this.cargando = false;
+        cargando.value = false;
       }
-    },
+    }
 
-    logout() {
-      this.token = null;
-      this.user = null;
-      this.rol = null;
+    function cerrarSesion() {
+      usuario.value = null;
+      token.value = null;
+      rol.value = null;
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('rol');
-    },
-  },
+    }
 
-  persist: true,
-});
+    function logout() {
+      cerrarSesion();
+    }
+
+    return {
+      token,
+      usuario,
+      user,
+      rol,
+      cargando,
+      estaAutenticado,
+      esAdmin,
+      nombreUsuario,
+      obtenerUsuario,
+      setSession,
+      guardarSesion,
+      login,
+      registrar,
+      cerrarSesion,
+      logout,
+    };
+  },
+  { persist: true }
+);
 
 export default useAuthStore;
