@@ -8,18 +8,11 @@ import ProveedoresView from '@/views/ProveedoresView.vue';
 import CategoriasView from '@/views/CategoriasView.vue';
 import ProductosView from '@/views/ProductosView.vue';
 import UsuariosView from '@/views/UsuariosView.vue';
-import ImportsView from '@/views/ImportsView.vue';
+import ImportacionView from '@/views/ImportacionView.vue';
 import CatalogoView from '@/views/CatalogoView.vue';
-import AboutView from '@/views/AboutView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 
 const routes = [
-  {
-    path: '/login',
-    name: 'login',
-    component: LoginView,
-    meta: { titulo: 'Iniciar Sesión', soloInvitados: true },
-  },
   {
     path: '/',
     component: AdminLayout,
@@ -27,53 +20,25 @@ const routes = [
       {
         path: '',
         name: 'catalogo',
+        alias: ['catalogo'],
         component: CatalogoView,
-        meta: { titulo: 'Catálogo de Productos', requiereAuth: false },
+        meta: { titulo: 'Catálogo' },
       },
-      {
-        path: 'productos',
-        name: 'productos',
-        component: ProductosView,
-        meta: { titulo: 'CRUD Productos', requiereAuth: true },
-      },
-      {
-        path: 'proveedores',
-        name: 'proveedores',
-        component: ProveedoresView,
-        meta: { titulo: 'CRUD Proveedores', requiereAuth: true },
-      },
-      {
-        path: 'categorias',
-        name: 'categorias',
-        component: CategoriasView,
-        meta: { titulo: 'CRUD Categorías', requiereAuth: true },
-      },
-      {
-        path: 'usuarios',
-        name: 'usuarios',
-        component: UsuariosView,
-        meta: { titulo: 'CRUD Usuarios', requiereAuth: true },
-      },
-      {
-        path: 'imports',
-        name: 'imports',
-        component: ImportsView,
-        meta: { titulo: 'Importación Masiva', requiereAuth: true },
-      },
-      {
-        path: 'acerca',
-        name: 'acerca',
-        component: AboutView,
-        meta: { titulo: 'Documentación' },
-      },
-      {
-        path: ':pathMatch(.*)*',
-        name: 'no-encontrado',
-        component: NotFoundView,
-        meta: { titulo: 'Página no encontrada' },
-      },
+      { path: 'importacion', name: 'importacion', component: ImportacionView, meta: { titulo: 'Importación masiva', requiereAuth: true } },
+      { path: 'proveedores', name: 'proveedores', component: ProveedoresView, meta: { titulo: 'Proveedores', requiereAuth: true } },
+      { path: 'categorias', name: 'categorias', component: CategoriasView, meta: { titulo: 'Categorías', requiereAuth: true } },
+      { path: 'productos', name: 'productos', component: ProductosView, meta: { titulo: 'Productos', requiereAuth: true } },
+      { path: 'usuarios', name: 'usuarios', component: UsuariosView, meta: { titulo: 'Usuarios', requiereAuth: true } },
     ],
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView,
+    alias: ['/admin/login'],
+    meta: { titulo: 'Iniciar sesión', soloInvitados: true },
+  },
+  { path: '/:pathMatch(.*)*', name: 'no-encontrado', component: NotFoundView, meta: { titulo: 'Página no encontrada' } },
 ];
 
 export const router = createRouter({
@@ -86,12 +51,7 @@ function protegerRutas(to) {
   const auth = useAuthStore();
 
   if (to.meta.requiereAuth === true && !auth.estaAutenticado) {
-    Notify.create({
-      type: 'negative',
-      message: 'Debes iniciar sesión para acceder a esta vista administrativa',
-      icon: 'lock',
-      position: 'top-right',
-    });
+    Notify.create({ type: 'negative', message: 'Debes iniciar sesión para entrar a esa página', icon: 'lock', position: 'top-right' });
     return { name: 'login' };
   }
 
@@ -105,6 +65,6 @@ function protegerRutas(to) {
 router.beforeEach(protegerRutas);
 
 router.afterEach((to) => {
-  const base = import.meta.env.VITE_APP_TITULO || 'CatálogoBulk';
+  const base = import.meta.env.VITE_APP_TITULO || 'Catalogo Bulkers';
   document.title = to.meta.titulo ? `${to.meta.titulo} | ${base}` : base;
 });

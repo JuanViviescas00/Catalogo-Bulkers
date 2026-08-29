@@ -34,3 +34,6 @@ export const del = async (url) => {
   const { data } = await api.delete(url);
   return data;
 };
+
+const apiService = { get, post, postForm, put, del };
+export default apiService;

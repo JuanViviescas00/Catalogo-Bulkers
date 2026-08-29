@@ -1,7 +1,7 @@
 import { Quasar, Notify, Dialog, Loading } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css';
 
-// Importar Animaciones de Quasar / Animate.css desde @quasar/extras
+// Importar Animaciones de Quasar / Animate.css
 import '@quasar/extras/animate/fadeIn.css';
 import '@quasar/extras/animate/fadeOut.css';
 import '@quasar/extras/animate/fadeInUp.css';
@@ -38,5 +38,3 @@ export function instalarQuasar(app) {
     },
   });
 }
-
-export default instalarQuasar;

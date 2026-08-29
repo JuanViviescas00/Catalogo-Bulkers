@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useGeneralStore } from '@/store/General';
 import { useAuthStore } from '@/store/Auth';
-import { useNotificar } from '@/composables/useNotificar'; // Ajusta la ruta si difiere en tu proyecto
+import { useNotificar } from '@/composables/useNotificar';
 import logo from '@/assets/logo.svg';
 
 const general = useGeneralStore();
@@ -13,55 +13,59 @@ const router = useRouter();
 const { notificarInfo } = useNotificar();
 
 const salir = () => {
-  auth.logout();
+  auth.cerrarSesion();
   notificarInfo('Sesión cerrada');
   router.push({ name: 'login' });
 };
 
-// Menú dinámico según el rol del usuario
-const opcionesMenu = computed(() => {
-  const menuCliente = [
-    { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront' },
-  ];
+const opcionesMenu = [
+  { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront' },
+  { name: 'importacion', titulo: 'Importación', icono: 'upload_file' },
+  { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping' },
+  { name: 'categorias', titulo: 'Categorías', icono: 'category' },
+  { name: 'productos', titulo: 'Productos', icono: 'inventory_2' },
+  { name: 'usuarios', titulo: 'Usuarios', icono: 'people' },
+];
 
-  // Si el usuario es administrador, añade las secciones de gestión
-  if (auth.esAdmin) {
-    return [
-      ...menuCliente,
-      { name: 'productos', titulo: 'Productos', icono: 'inventory_2' },
-      { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping' },
-      { name: 'categorias', titulo: 'Categorías', icono: 'category' },
-      { name: 'usuarios', titulo: 'Usuarios', icono: 'people' },
-      { name: 'imports', titulo: 'Importación Masiva', icono: 'cloud_upload' },
-      { name: 'acerca', titulo: 'Documentación', icono: 'info' },
-    ];
-  }
-
-  return menuCliente;
-});
-
-const tituloSeccion = computed(() => route.meta?.titulo || 'CatálogoBulk');
+const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
 </script>
 
 <template>
   <q-layout view="lHh Lpr lFf" class="admin-layout">
     <q-header elevated class="admin-header text-white">
-     <q-toolbar class="admin-toolbar">
-  <q-btn flat dense round icon="menu" aria-label="Abrir menú" @click="general.alternarMenu()" class="admin-menu-btn" />
-  <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
+      <q-toolbar class="admin-toolbar">
+        <q-btn
+          v-if="auth.estaAutenticado"
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Abrir menu"
+          @click="general.alternarMenu()"
+          class="admin-menu-btn"
+        />
+        <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
 
-  <!-- Solo muestra la información del usuario y el botón de cerrar sesión si ya está autenticado -->
-  <template v-if="auth.estaAutenticado">
-    <div class="text-caption q-mr-sm gt-xs admin-user">{{ auth.obtenerUsuario?.email || 'Usuario' }}</div>
-    <q-btn flat dense round icon="logout" aria-label="Cerrar sesión" @click="salir" class="admin-action-btn">
-      <q-tooltip>Cerrar sesión</q-tooltip>
-    </q-btn>
-  </template>
-</q-toolbar>
+        <template v-if="auth.estaAutenticado">
+          <div class="text-caption q-mr-sm gt-xs admin-user">{{ auth.nombreUsuario }}</div>
+          <q-btn flat dense round icon="logout" aria-label="Cerrar sesión" @click="salir" class="admin-action-btn">
+            <q-tooltip>Cerrar sesión</q-tooltip>
+          </q-btn>
+        </template>
+
+        <q-btn v-else flat dense no-caps icon="login" label="Entrar" :to="{ name: 'login' }" class="admin-action-btn" />
+      </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="general.menuAbierto" show-if-above bordered :width="248" class="admin-drawer">
-      <div class="admin-drawer__brand cursor-pointer" @click="router.push('/')">
+    <q-drawer
+      v-if="auth.estaAutenticado"
+      v-model="general.menuAbierto"
+      show-if-above
+      bordered
+      :width="248"
+      class="admin-drawer"
+    >
+      <div class="admin-drawer__brand">
         <img :src="logo" alt="Logo" width="34" height="34" class="q-mr-sm" />
         <div class="text-weight-bold">{{ general.titulo }}</div>
       </div>
@@ -69,7 +73,7 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'CatálogoBulk');
       <q-separator />
 
       <q-list padding>
-        <q-item-label header class="text-uppercase text-caption text-weight-bold admin-menu-label">Navegación</q-item-label>
+        <q-item-label header class="text-uppercase text-caption text-weight-bold admin-menu-label">Menú</q-item-label>
 
         <q-item
           v-for="opcion in opcionesMenu"
