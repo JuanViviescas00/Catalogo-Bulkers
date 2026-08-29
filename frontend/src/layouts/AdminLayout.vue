@@ -19,7 +19,8 @@ const todasLasOpciones = [
 ];
 
 const opcionesMenu = computed(() => {
-  if (auth.rol === 'admin') {
+  const esAdministrador = auth.rol === 'admin' || auth.usuario?.rol === 'admin';
+  if (esAdministrador) {
     return todasLasOpciones;
   }
   return todasLasOpciones.filter((op) => !op.soloAdmin);
@@ -28,17 +29,25 @@ const opcionesMenu = computed(() => {
 const tituloSeccion = computed(() => route.meta?.titulo || 'Catálogo');
 
 const salir = () => {
-  auth.clearSession();
-  window.location.href = '#/login';
-  window.location.reload();
+  try {
+    if (typeof auth.clearSession === 'function') {
+      auth.clearSession();
+    }
+  } catch (e) {
+    console.error(e);
+  } finally {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '#/login';
+    window.location.reload();
+  }
 };
-
 </script>
 
 <template>
   <q-layout view="lHh Lpr lFf" class="admin-layout">
     <q-header elevated class="admin-header text-white">
-      <q-toolbar class="admin-toolbar">
+      <q-toolbar class="admin-toolbar" style="z-index: 10000; position: relative;">
         <q-btn
           v-if="auth.estaAutenticado"
           flat
@@ -52,8 +61,15 @@ const salir = () => {
         <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
 
         <template v-if="auth.estaAutenticado">
-          <div class="text-caption q-mr-sm gt-xs admin-user">{{ auth.nombreUsuario }}</div>
-          <q-btn flat dense round icon="logout" aria-label="Cerrar sesión" @click="salir" class="admin-action-btn">
+          <q-btn
+            flat
+            no-caps
+            class="q-px-sm"
+            style="z-index: 10001; cursor: pointer;"
+            @click="salir"
+          >
+            <span class="text-caption gt-xs admin-user q-mr-sm">{{ auth.nombreUsuario || 'Usuario' }}</span>
+            <q-icon name="logout" size="20px" />
             <q-tooltip>Cerrar sesión</q-tooltip>
           </q-btn>
         </template>
