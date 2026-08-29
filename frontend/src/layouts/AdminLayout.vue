@@ -28,9 +28,8 @@ const opcionesMenu = computed(() => {
 const tituloSeccion = computed(() => route.meta?.titulo || 'Catálogo');
 
 const salir = () => {
-  auth.clearSession();
-  window.location.href = '#/login';
-  window.location.reload();
+  auth.cerrarSesion();
+  router.push({ name: 'catalogo' });
 };
 
 </script>
