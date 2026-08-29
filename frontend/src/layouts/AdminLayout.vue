@@ -34,7 +34,16 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
   <q-layout view="lHh Lpr lFf" class="admin-layout">
     <q-header elevated class="admin-header text-white">
       <q-toolbar class="admin-toolbar">
-        <q-btn flat dense round icon="menu" aria-label="Abrir menu" @click="general.alternarMenu()" class="admin-menu-btn" />
+        <q-btn
+          v-if="auth.estaAutenticado"
+          flat
+          dense
+          round
+          icon="menu"
+          aria-label="Abrir menu"
+          @click="general.alternarMenu()"
+          class="admin-menu-btn"
+        />
         <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
 
         <template v-if="auth.estaAutenticado">
@@ -48,7 +57,14 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="general.menuAbierto" show-if-above bordered :width="248" class="admin-drawer">
+    <q-drawer
+      v-if="auth.estaAutenticado"
+      v-model="general.menuAbierto"
+      show-if-above
+      bordered
+      :width="248"
+      class="admin-drawer"
+    >
       <div class="admin-drawer__brand">
         <img :src="logo" alt="Logo" width="34" height="34" class="q-mr-sm" />
         <div class="text-weight-bold">{{ general.titulo }}</div>
@@ -76,7 +92,16 @@ const tituloSeccion = computed(() => route.meta?.titulo || 'Panel');
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition
+          appear
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          mode="out-in"
+        >
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>

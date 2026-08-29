@@ -42,6 +42,13 @@ onMounted(cargar);
 const categoriasOptions = computed(() => categorias.value.map((c) => ({ label: c.nombre, value: c.slug })));
 const proveedoresOptions = computed(() => proveedores.value.map((p) => ({ label: p.nombre, value: p._id })));
 
+const limpiarFiltros = () => {
+  buscador.value = '';
+  categoriaSeleccionada.value = null;
+  proveedorSeleccionado.value = null;
+  soloDisponibles.value = false;
+};
+
 const productosFiltrados = computed(() => {
   return productos.value.filter((producto) => {
     const nombreCoincide = producto.nombre.toLowerCase().includes(buscador.value.toLowerCase());
@@ -65,22 +72,7 @@ const productosFiltrados = computed(() => {
       </header>
 
       <div class="catalog-content">
-        <aside class="catalog-sidebar">
-          <div class="catalog-brand">
-            <span class="catalog-brand__icon">▣</span>
-            <span>CatalogoBulk</span>
-          </div>
-
-          <div class="catalog-sidebar__section">Navegación</div>
-
-          <nav class="catalog-nav">
-            <button type="button" class="catalog-nav__item active">
-              <span>Catálogo</span>
-            </button>
-          </nav>
-        </aside>
-
-        <main class="catalog-main">
+        <main class="catalog-main" style="width: 100%">
           <div class="catalog-main__head">
             <h1>Catálogo de Productos</h1>
             <span class="catalog-main__chips">{{ productosFiltrados.length }} disponibles</span>
@@ -116,7 +108,14 @@ const productosFiltrados = computed(() => {
 
                 <q-toggle v-model="soloDisponibles" label="Solo disponibles" />
 
-                <q-btn class="catalog-clear-btn" no-caps outline color="primary" label="Limpiar filtros" />
+                <q-btn
+                  class="catalog-clear-btn"
+                  no-caps
+                  outline
+                  color="primary"
+                  label="Limpiar filtros"
+                  @click="limpiarFiltros"
+                />
               </div>
             </div>
 

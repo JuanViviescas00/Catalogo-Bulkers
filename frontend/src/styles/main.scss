@@ -98,8 +98,8 @@ body {
 }
 
 .catalog-content {
-  display: grid;
-  grid-template-columns: 240px 1fr;
+  display: block;
+  width: 100%;
   min-height: 680px;
 }
 
