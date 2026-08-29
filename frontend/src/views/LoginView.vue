@@ -87,10 +87,6 @@ const iniciarSesion = async () => {
                 </template>
               </q-input>
             </q-card-section>
-
-            <q-card-actions class="q-px-md q-pb-md">
-              <q-btn unelevated no-caps type="submit" color="primary" class="full-width login-btn" label="Entrar" :loading="enviando" />
-            </q-card-actions>
           </q-form>
         </q-card>
 
