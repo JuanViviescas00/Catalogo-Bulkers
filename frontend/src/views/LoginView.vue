@@ -24,15 +24,10 @@ const iniciarSesion = async () => {
       password: (formulario.value.password || '').trim(),
     });
 
-    // 1. Usar el método correcto del store (setSession en lugar de guardarSesion)
     auth.setSession(respuesta);
-
     notificarOk('Bienvenido');
-
-    // 2. Redirigir al catálogo
     router.push({ name: 'catalogo' });
   } catch (e) {
-    // 3. Pasar el mensaje de error o el objeto capturado
     const mensajeError = e.response?.data?.mensaje || e.mensaje || e.message || e;
     notificarError(mensajeError);
   } finally {
@@ -87,6 +82,10 @@ const iniciarSesion = async () => {
                 </template>
               </q-input>
             </q-card-section>
+
+            <q-card-actions class="q-px-md q-pb-md">
+              <q-btn unelevated no-caps type="submit" color="primary" class="full-width login-btn" label="Iniciar sesión" :loading="enviando" />
+            </q-card-actions>
           </q-form>
         </q-card>
 
