@@ -1,14 +1,114 @@
 [
   {
-    "nombre": "Ferretería",
-    "slug": "ferreteria",
-    "descripcion": "Productos para construcción y mantenimiento",
-    "imagenUrl": "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789"
+    "nombre": "Herramientas Manuales",
+    "slug": "herramientas-manuales",
+    "descripcion": "Martillos llaves destornilladores y alicates de uso profesional",
+    "imagenUrl": "https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=300",
+    "activo": true
   },
   {
-    "nombre": "Herramientas",
-    "slug": "herramientas",
-    "descripcion": "Herramientas profesionales y manuales",
-    "imagenUrl": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518"
+    "nombre": "Herramientas Eléctricas",
+    "slug": "herramientas-electricas",
+    "descripcion": "Taladros pulidoras sierras caladoras y rotomartillos",
+    "imagenUrl": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Materiales de Construcción",
+    "slug": "materiales-de-construccion",
+    "descripcion": "Cemento yeso arena ladrillos y aditivos estructurales",
+    "imagenUrl": "https://images.unsplash.com/photo-1590069261209-f8e9b8642343?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Pinturas y Acabados",
+    "slug": "pinturas-y-acabados",
+    "descripcion": "Pinturas vinilos esmaltes brochas y rodillos para interiores y exteriores",
+    "imagenUrl": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Iluminación y Electricidad",
+    "slug": "iluminacion-y-electricidad",
+    "descripcion": "Bombillos LED cables interruptores breakers y paneles solares",
+    "imagenUrl": "https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Fontanería y Plomería",
+    "slug": "fontaneria-y-plomeria",
+    "descripcion": "Tuberías PVC accesorios llaves de paso y griferías residenciales",
+    "imagenUrl": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Seguridad Industrial",
+    "slug": "seguridad-industrial",
+    "descripcion": "Cascos guantes gafas botas de seguridad y arneses de protección",
+    "imagenUrl": "https://images.unsplash.com/photo-1618090584176-7132b9911657?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Tornillería y Fijaciones",
+    "slug": "tornilleria-y-fijaciones",
+    "descripcion": "Tornillos pernos chazos arandelas y anclajes pesados",
+    "imagenUrl": "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Cerrajería y Seguridad",
+    "slug": "cerrajeria-y-seguridad",
+    "descripcion": "Cerraduras digitales candados bisagras y pasadores de alta seguridad",
+    "imagenUrl": "https://images.unsplash.com/photo-1558002038-1055907df827?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Adhesivos y Químicos",
+    "slug": "adhesivos-y-quimicos",
+    "descripcion": "Siliconas pegantes epóxicos impermeabilizantes y selladores",
+    "imagenUrl": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Jardinería y Agro",
+    "slug": "jardineria-y-agro",
+    "descripcion": "Cortacéspedes mangueras fertilizantes y herramientas agrícolas",
+    "imagenUrl": "https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Soldadura y Metales",
+    "slug": "soldadura-y-metales",
+    "descripcion": "Equipos inversores electrodos caretas fotosensibles y alambres MIG",
+    "imagenUrl": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Equipos de Medición",
+    "slug": "equipos-de-medicion",
+    "descripcion": "Niveles láser cintas métricas multímetros y calibradores digitales",
+    "imagenUrl": "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Abrasivos y Corte",
+    "slug": "abrasivos-y-corte",
+    "descripcion": "Discos de corte lijas copas diamantadas y ruedas de esmeril",
+    "imagenUrl": "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Maderas y Tableros",
+    "slug": "maderas-y-tableros",
+    "descripcion": "Listones aglomerados MDF y triplex para carpintería",
+    "imagenUrl": "https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Automotriz y Mecánica",
+    "slug": "automotriz-y-mecanica",
+    "descripcion": "Gatos hidráulicos copas rache grasas y aceites lubricantes",
+    "imagenUrl": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=300",
+    "activo": true
   }
 ]

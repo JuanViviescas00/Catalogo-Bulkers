@@ -15,7 +15,7 @@ const opcionesTipo = [
   { label: 'Todo el catálogo', value: 'todos' },
   { label: 'Proveedores', value: 'proveedores' },
   { label: 'Categorías', value: 'categorias' },
-  { label: 'roductos', value: 'productos' },
+  { label: 'Productos', value: 'productos' },
 ];
 
 const cargarHistorial = async () => {

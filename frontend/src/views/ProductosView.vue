@@ -34,10 +34,10 @@ const formulario = ref({
 const columnas = [
   { name: 'sku', label: 'SKU', field: 'sku', align: 'left', sortable: true },
   { name: 'nombre', label: 'Nombre', field: 'nombre', align: 'left', sortable: true },
-  { name: 'precio', label: 'Precio', field: 'precio', align: 'right', sortable: true },
+  { name: 'precio', label: 'Precio', field: 'precio', align: 'right', sortable: true, format: (v) => `$${Number(v || 0).toLocaleString()}` },
   { name: 'stock', label: 'Stock', field: 'stock', align: 'center', sortable: true },
   { name: 'categoria', label: 'Categoría', field: 'categoria', align: 'left', sortable: true },
-  { name: 'disponible', label: 'Disponible', field: 'disponible', align: 'center', sortable: true },
+  { name: 'estado', label: 'Estado', field: 'activo', align: 'center', sortable: true },
   { name: 'acciones', label: 'Acciones', field: 'acciones', align: 'right' },
 ];
 
@@ -56,7 +56,7 @@ const cargar = async () => {
   cargando.value = true;
   try {
     const [listaProductos, listaCategorias, listaProveedores] = await Promise.all([
-      get('/productos'),
+      get('/productos?todos=true'),
       get('/categorias'),
       get('/proveedores'),
     ]);
@@ -138,19 +138,24 @@ const guardar = async () => {
   }
 };
 
-const eliminarProducto = async (producto) => {
+const cambiarEstado = async (producto) => {
+  const nuevoEstado = producto.activo === false;
+  const accionTexto = nuevoEstado ? 'activar' : 'desactivar';
   const confirmado = await confirmar({
-    titulo: 'Desactivar producto',
-    mensaje: `¿Deseas desactivar ${producto.nombre}?`,
-    textoOk: 'Desactivar',
-    color: 'negative',
+    titulo: nuevoEstado ? 'Activar producto' : 'Desactivar producto',
+    mensaje: `¿Deseas ${accionTexto} el producto "${producto.nombre}" (${producto.sku}) para la trazabilidad de inventario?`,
+    textoOk: nuevoEstado ? 'Activar' : 'Desactivar',
+    color: nuevoEstado ? 'positive' : 'negative',
   });
 
   if (!confirmado) return;
 
   try {
-    await del(`/productos/${producto._id}`);
-    notificarOk('Producto desactivado');
+    await put(`/productos/${producto._id}`, {
+      activo: nuevoEstado,
+      disponible: nuevoEstado ? Number(producto.stock) > 0 : false,
+    });
+    notificarOk(`Producto ${nuevoEstado ? 'activado' : 'desactivado'} exitosamente`);
     await cargar();
   } catch (e) {
     notificarError(e);
@@ -161,39 +166,46 @@ const eliminarProducto = async (producto) => {
 <template>
   <q-page>
     <div class="contenedor-app">
-      <EncabezadoPagina titulo="Productos" subtitulo="Gestión del catálogo de productos" icono="inventory_2">
+      <EncabezadoPagina titulo="Productos" subtitulo="Gestión y trazabilidad del catálogo de productos" icono="inventory_2">
         <template #acciones>
           <q-btn unelevated no-caps color="primary" icon="add" label="Nuevo producto" @click="abrirCreacion" />
         </template>
       </EncabezadoPagina>
 
       <TablaDatos :filas="productos" :columnas="columnas" :cargando="cargando" mensaje-vacio="No hay productos registrados">
-        <template #body-cell-disponible="slotProps">
+        <template #body-cell-estado="slotProps">
           <q-td :props="slotProps" class="text-center">
-            <q-badge :color="slotProps.row.disponible ? 'positive' : 'grey-6'" :label="slotProps.row.disponible ? 'Sí' : 'No'" />
+            <q-badge
+              :color="slotProps.row.activo !== false ? (slotProps.row.stock > 0 ? 'positive' : 'warning') : 'grey-7'"
+              :label="slotProps.row.activo !== false ? (slotProps.row.stock > 0 ? 'Activo' : 'Sin stock') : 'Inactivo'"
+            />
           </q-td>
         </template>
 
         <template #body-cell-acciones="slotProps">
-  <q-td :props="slotProps" class="text-right q-gutter-x-xs">
-    <q-btn 
-      flat 
-      round 
-      size="md" 
-      icon="edit" 
-      color="primary" 
-      @click="abrirEdicion(slotProps.row)" 
-    />
-    <q-btn 
-      flat 
-      round 
-      size="md" 
-      icon="delete" 
-      color="negative" 
-      @click="eliminarProducto(slotProps.row)" 
-    />
-  </q-td>
-</template>
+          <q-td :props="slotProps" class="text-right q-gutter-x-xs">
+            <q-btn 
+              flat 
+              round 
+              size="md" 
+              icon="edit" 
+              color="primary" 
+              @click="abrirEdicion(slotProps.row)" 
+            >
+              <q-tooltip>Editar producto</q-tooltip>
+            </q-btn>
+            <q-btn 
+              flat 
+              round 
+              size="md" 
+              :icon="slotProps.row.activo !== false ? 'toggle_on' : 'toggle_off'" 
+              :color="slotProps.row.activo !== false ? 'negative' : 'positive'" 
+              @click="cambiarEstado(slotProps.row)" 
+            >
+              <q-tooltip>{{ slotProps.row.activo !== false ? 'Desactivar producto' : 'Activar producto' }}</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
 
       </TablaDatos>
     </div>

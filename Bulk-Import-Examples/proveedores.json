@@ -1,0 +1,114 @@
+[
+  {
+    "nombre": "Ferretería Industrial del Norte",
+    "slug": "ferreteria-industrial-del-norte",
+    "contactoEmail": "ventas@ferreterianorte.com",
+    "logoUrl": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Herramientas Profesionales Bosch & Cía",
+    "slug": "herramientas-profesionales-bosch",
+    "contactoEmail": "contacto@herramientasbosch.com",
+    "logoUrl": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Distribuidora Eléctrica Andina",
+    "slug": "distribuidora-electrica-andina",
+    "contactoEmail": "comercial@electricaandina.com",
+    "logoUrl": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Pinturas y Revestimientos Corona",
+    "slug": "pinturas-y-revestimientos-corona",
+    "contactoEmail": "servicio@pinturascorona.com",
+    "logoUrl": "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Materiales y Agregados del Valle",
+    "slug": "materiales-y-agregados-del-valle",
+    "contactoEmail": "pedidos@agregadosvalle.com",
+    "logoUrl": "https://images.unsplash.com/photo-1590069261209-f8e9b8642343?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Tuberías y Griferías Pavco Plast",
+    "slug": "tuberias-y-griferias-pavco",
+    "contactoEmail": "atencion@tuberiaspavco.com",
+    "logoUrl": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Seguridad Industrial 3M Protection",
+    "slug": "seguridad-industrial-3m",
+    "contactoEmail": "seguridad@3mprotection.com",
+    "logoUrl": "https://images.unsplash.com/photo-1618090584176-7132b9911657?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Tornillos y Fijaciones Especiales SAS",
+    "slug": "tornillos-y-fijaciones-especiales",
+    "contactoEmail": "info@tornillosfijaciones.com",
+    "logoUrl": "https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Iluminación LED Phillips Master",
+    "slug": "iluminacion-led-phillips",
+    "contactoEmail": "proyectos@iluminacionphillips.com",
+    "logoUrl": "https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Cerrajería y Candados Yale Pro",
+    "slug": "cerrajeria-y-candados-yale",
+    "contactoEmail": "ventas@cerrajeriayale.com",
+    "logoUrl": "https://images.unsplash.com/photo-1558002038-1055907df827?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Adhesivos y Siliconas Sika Master",
+    "slug": "adhesivos-y-siliconas-sika",
+    "contactoEmail": "soporte@adhesivossika.com",
+    "logoUrl": "https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Maquinaria Liviana y Compactación",
+    "slug": "maquinaria-liviana-compactacion",
+    "contactoEmail": "alquiler@maquinarialiviana.com",
+    "logoUrl": "https://images.unsplash.com/photo-1579412690850-bd41cd0af397?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Equipos de Medición y Láser DeWalt",
+    "slug": "equipos-medicion-laser-dewalt",
+    "contactoEmail": "precision@equiposdewalt.com",
+    "logoUrl": "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Jardinería y Motosierras Stihl Colombia",
+    "slug": "jardineria-motosierras-stihl",
+    "contactoEmail": "ventas@stihlcolombia.com",
+    "logoUrl": "https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Soldaduras y Gases Industriales Indura",
+    "slug": "soldaduras-y-gases-indura",
+    "contactoEmail": "tecnica@soldadurasindura.com",
+    "logoUrl": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300",
+    "activo": true
+  },
+  {
+    "nombre": "Maderas y Tableros Triplex del Pacífico",
+    "slug": "maderas-y-tableros-triplex",
+    "contactoEmail": "comercial@triplexpacifico.com",
+    "logoUrl": "https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?w=300",
+    "activo": true
+  }
+]

@@ -3,20 +3,12 @@ version: '3.8'
 services:
   # Servicio Backend / API Express
   api:
-<<<<<<< HEAD
-    build: ./backend
-=======
     build: ./Backend
->>>>>>> f6a9ed60057c1fa41e39c9ec91b2157db3b9ab66
     container_name: catalogo_api
     restart: always
     ports:
       - "3000:3000"
-<<<<<<< HEAD
-    env_file: ./backend/.env
-=======
     env_file: ./Backend/.env
->>>>>>> f6a9ed60057c1fa41e39c9ec91b2157db3b9ab66
     depends_on:
       - mongo
       - redis

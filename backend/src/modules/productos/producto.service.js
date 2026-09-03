@@ -30,10 +30,16 @@ export class ProductoService {
 
   async listarProductos(query) {
     const page = parseInt(query.page, 10) || 1;
-    let limit = parseInt(query.limit, 10) || 20;
-    if (limit > 100) limit = 100;
+    let limit = parseInt(query.limit, 10) || 50;
+    if (limit > 1000) limit = 1000;
 
-    const filtro = { activo: true };
+    const filtro = {};
+
+    if (query.activo !== undefined) {
+      filtro.activo = query.activo === 'true';
+    } else if (query.todos !== 'true') {
+      filtro.activo = true;
+    }
 
     if (query.categoria) {
       filtro.categoria = query.categoria.trim().toLowerCase();
@@ -97,12 +103,15 @@ export class ProductoService {
 
   async eliminarProducto(id) {
     const producto = await repo.obtenerPorId(id);
-    if (!producto || !producto.activo) {
+    if (!producto) {
       throw new AppError('Producto no encontrado', 404, 'PRODUCT_NOT_FOUND');
     }
 
-    // Borrado lógico / Desactivación
-    return await repo.desactivar(id);
+    const nuevoEstado = !producto.activo;
+    return await repo.actualizar(id, {
+      activo: nuevoEstado,
+      disponible: nuevoEstado && producto.stock > 0,
+    });
   }
 }
 

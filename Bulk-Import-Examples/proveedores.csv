@@ -1,3 +1,17 @@
 nombre,slug,contactoEmail,logoUrl,activo
-Proveedor Uno,proveedor-uno,ventas@proveedoruno.com,https://images.unsplash.com/photo-1556740749-887f6717d7e4,true
-Proveedor Dos,proveedor-dos,contacto@proveedordos.com,https://images.unsplash.com/photo-1522202176988-66273c2fd55f,true
+Ferretería Industrial del Norte,ferreteria-industrial-del-norte,ventas@ferreterianorte.com,https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=300,true
+Herramientas Profesionales Bosch & Cía,herramientas-profesionales-bosch,contacto@herramientasbosch.com,https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300,true
+Distribuidora Eléctrica Andina,distribuidora-electrica-andina,comercial@electricaandina.com,https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=300,true
+Pinturas y Revestimientos Corona,pinturas-y-revestimientos-corona,servicio@pinturascorona.com,https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=300,true
+Materiales y Agregados del Valle,materiales-y-agregados-del-valle,pedidos@agregadosvalle.com,https://images.unsplash.com/photo-1590069261209-f8e9b8642343?w=300,true
+Tuberías y Griferías Pavco Plast,tuberias-y-griferias-pavco,atencion@tuberiaspavco.com,https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=300,true
+Seguridad Industrial 3M Protection,seguridad-industrial-3m,seguridad@3mprotection.com,https://images.unsplash.com/photo-1618090584176-7132b9911657?w=300,true
+Tornillos y Fijaciones Especiales SAS,tornillos-y-fijaciones-especiales,info@tornillosfijaciones.com,https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=300,true
+Iluminación LED Phillips Master,iluminacion-led-phillips,proyectos@iluminacionphillips.com,https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=300,true
+Cerrajería y Candados Yale Pro,cerrajeria-y-candados-yale,ventas@cerrajeriayale.com,https://images.unsplash.com/photo-1558002038-1055907df827?w=300,true
+Adhesivos y Siliconas Sika Master,adhesivos-y-siliconas-sika,soporte@adhesivossika.com,https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=300,true
+Maquinaria Liviana y Compactación,maquinaria-liviana-compactacion,alquiler@maquinarialiviana.com,https://images.unsplash.com/photo-1579412690850-bd41cd0af397?w=300,true
+Equipos de Medición y Láser DeWalt,equipos-medicion-laser-dewalt,precision@equiposdewalt.com,https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=300,true
+Jardinería y Motosierras Stihl Colombia,jardineria-motosierras-stihl,ventas@stihlcolombia.com,https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=300,true
+Soldaduras y Gases Industriales Indura,soldaduras-y-gases-indura,tecnica@soldadurasindura.com,https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300,true
+Maderas y Tableros Triplex del Pacífico,maderas-y-tableros-triplex,comercial@triplexpacifico.com,https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?w=300,true

@@ -100,18 +100,19 @@ const guardar = async () => {
 };
 
 const cambiarEstado = async (proveedor) => {
+  const nuevoEstado = !proveedor.activo;
   const confirmado = await confirmar({
-    titulo: proveedor.activo ? 'Desactivar proveedor' : 'Activar proveedor',
-    mensaje: `¿Deseas ${proveedor.activo ? 'desactivar' : 'activar'} a ${proveedor.nombre}?`,
-    textoOk: proveedor.activo ? 'Desactivar' : 'Activar',
-    color: proveedor.activo ? 'negative' : 'primary',
+    titulo: nuevoEstado ? 'Activar proveedor' : 'Desactivar proveedor',
+    mensaje: `¿Deseas ${nuevoEstado ? 'activar' : 'desactivar'} al proveedor "${proveedor.nombre}"?`,
+    textoOk: nuevoEstado ? 'Activar' : 'Desactivar',
+    color: nuevoEstado ? 'positive' : 'negative',
   });
 
   if (!confirmado) return;
 
   try {
-    await del(`/proveedores/${proveedor._id}`);
-    notificarOk('Proveedor actualizado');
+    await put(`/proveedores/${proveedor._id}`, { activo: nuevoEstado });
+    notificarOk(`Proveedor ${nuevoEstado ? 'activado' : 'desactivado'} exitosamente`);
     await cargar();
   } catch (e) {
     notificarError(e);
@@ -122,7 +123,7 @@ const cambiarEstado = async (proveedor) => {
 <template>
   <q-page>
     <div class="contenedor-app">
-      <EncabezadoPagina titulo="Proveedores" subtitulo="Gestión de proveedores del catálogo" icono="local_shipping">
+      <EncabezadoPagina titulo="Proveedores" subtitulo="Gestión y trazabilidad de proveedores del catálogo" icono="local_shipping">
         <template #acciones>
           <q-btn unelevated no-caps color="primary" icon="add" label="Nuevo proveedor" @click="abrirCreacion" />
         </template>
@@ -131,14 +132,26 @@ const cambiarEstado = async (proveedor) => {
       <TablaDatos :filas="proveedores" :columnas="columnas" :cargando="cargando" mensaje-vacio="No hay proveedores registrados">
         <template #body-cell-activo="slotProps">
           <q-td :props="slotProps" class="text-center">
-            <q-badge :color="slotProps.row.activo ? 'positive' : 'grey-6'" :label="slotProps.row.activo ? 'Activo' : 'Inactivo'" />
+            <q-badge :color="slotProps.row.activo ? 'positive' : 'grey-7'" :label="slotProps.row.activo ? 'Activo' : 'Inactivo'" />
           </q-td>
         </template>
 
         <template #body-cell-acciones="slotProps">
-          <q-td :props="slotProps" class="text-right">
-            <q-btn flat dense round size="sm" icon="edit" color="primary" @click="abrirEdicion(slotProps.row)" />
-            <q-btn flat dense round size="sm" :icon="slotProps.row.activo ? 'toggle_on' : 'toggle_off'" :color="slotProps.row.activo ? 'negative' : 'positive'" @click="cambiarEstado(slotProps.row)" />
+          <q-td :props="slotProps" class="text-right q-gutter-x-xs">
+            <q-btn flat dense round size="md" icon="edit" color="primary" @click="abrirEdicion(slotProps.row)">
+              <q-tooltip>Editar proveedor</q-tooltip>
+            </q-btn>
+            <q-btn
+              flat
+              dense
+              round
+              size="md"
+              :icon="slotProps.row.activo ? 'toggle_on' : 'toggle_off'"
+              :color="slotProps.row.activo ? 'negative' : 'positive'"
+              @click="cambiarEstado(slotProps.row)"
+            >
+              <q-tooltip>{{ slotProps.row.activo ? 'Desactivar proveedor' : 'Activar proveedor' }}</q-tooltip>
+            </q-btn>
           </q-td>
         </template>
       </TablaDatos>

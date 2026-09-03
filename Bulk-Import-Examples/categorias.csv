@@ -1,0 +1,17 @@
+nombre,slug,descripcion,imagenUrl,activo
+Herramientas Manuales,herramientas-manuales,Martillos llaves destornilladores y alicates de uso profesional,https://images.unsplash.com/photo-1581244277943-fe4a9c777189?w=300,true
+Herramientas Eléctricas,herramientas-electricas,Taladros pulidoras sierras caladoras y rotomartillos,https://images.unsplash.com/photo-1504148455328-c376907d081c?w=300,true
+Materiales de Construcción,materiales-de-construccion,Cemento yeso arena ladrillos y aditivos estructurales,https://images.unsplash.com/photo-1590069261209-f8e9b8642343?w=300,true
+Pinturas y Acabados,pinturas-y-acabados,Pinturas vinilos esmaltes brochas y rodillos para interiores y exteriores,https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=300,true
+Iluminación y Electricidad,iluminacion-y-electricidad,Bombillos LED cables interruptores breakers y paneles solares,https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=300,true
+Fontanería y Plomería,fontaneria-y-plomeria,Tuberías PVC accesorios llaves de paso y griferías residenciales,https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=300,true
+Seguridad Industrial,seguridad-industrial,Cascos guantes gafas botas de seguridad y arneses de protección,https://images.unsplash.com/photo-1618090584176-7132b9911657?w=300,true
+Tornillería y Fijaciones,tornilleria-y-fijaciones,Tornillos pernos chazos arandelas y anclajes pesados,https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=300,true
+Cerrajería y Seguridad,cerrajeria-y-seguridad,Cerraduras digitales candados bisagras y pasadores de alta seguridad,https://images.unsplash.com/photo-1558002038-1055907df827?w=300,true
+Adhesivos y Químicos,adhesivos-y-quimicos,Siliconas pegantes epóxicos impermeabilizantes y selladores,https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?w=300,true
+Jardinería y Agro,jardineria-y-agro,Cortacéspedes mangueras fertilizantes y herramientas agrícolas,https://images.unsplash.com/photo-1592417817098-8f3d69109853?w=300,true
+Soldadura y Metales,soldadura-y-metales,Equipos inversores electrodos caretas fotosensibles y alambres MIG,https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=300,true
+Equipos de Medición,equipos-de-medicion,Niveles láser cintas métricas multímetros y calibradores digitales,https://images.unsplash.com/photo-1616401784845-180882ba9ba8?w=300,true
+Abrasivos y Corte,abrasivos-y-corte,Discos de corte lijas copas diamantadas y ruedas de esmeril,https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=300,true
+Maderas y Tableros,maderas-y-tableros,Listones aglomerados MDF y triplex para carpintería,https://images.unsplash.com/photo-1546484396-fb3fc6f95f98?w=300,true
+Automotriz y Mecánica,automotriz-y-mecanica,Gatos hidráulicos copas rache grasas y aceites lubricantes,https://images.unsplash.com/photo-1486006920555-c77dce18193b?w=300,true
