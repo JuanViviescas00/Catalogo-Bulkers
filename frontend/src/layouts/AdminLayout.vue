@@ -12,11 +12,11 @@ const general = useGeneralStore();
 
 const todasLasOpciones = [
   { name: 'catalogo', titulo: 'Catálogo', icono: 'storefront', soloAdmin: false },
-  { name: 'importacion', titulo: 'Importación Masiva', icono: 'cloud_upload', soloAdmin: true },
   { name: 'proveedores', titulo: 'Proveedores', icono: 'local_shipping', soloAdmin: true },
   { name: 'categorias', titulo: 'Categorías', icono: 'category', soloAdmin: true },
   { name: 'productos', titulo: 'Productos', icono: 'inventory_2', soloAdmin: true },
   { name: 'usuarios', titulo: 'Usuarios', icono: 'people', soloAdmin: true },
+  { name: 'importacion', titulo: 'Importación Masiva', icono: 'cloud_upload', soloAdmin: true },
 ];
 
 const opcionesMenu = computed(() => {
