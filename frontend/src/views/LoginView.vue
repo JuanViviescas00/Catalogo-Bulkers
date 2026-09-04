@@ -11,7 +11,7 @@ const auth = useAuthStore();
 const general = useGeneralStore();
 const { notificarOk, notificarError } = useNotificar();
 
-const formulario = ref({ email: '', password: '' });
+const formulario = ref({ email: 'admin@demo.com', password: 'secreta123' });
 const verPassword = ref(false);
 const enviando = ref(false);
 
@@ -67,6 +67,11 @@ const iniciarSesion = async () => {
 
           <q-form greedy @submit="iniciarSesion">
             <q-card-section class="q-gutter-md">
+              <div class="q-pa-xs bg-green-1 text-primary rounded-borders row items-center justify-between text-caption" style="border: 1px dashed #2e7d32; border-radius: 8px; padding: 6px 12px;">
+                <span><strong>Acceso Demo:</strong> admin@demo.com / secreta123</span>
+                <q-btn flat dense size="xs" color="primary" label="Copiar" @click="formulario.email = 'admin@demo.com'; formulario.password = 'secreta123'" />
+              </div>
+
               <q-input v-model="formulario.email" outlined dense label="Email" type="email" autocomplete="email" autofocus>
                 <template #prepend>
                   <q-icon name="mail" />

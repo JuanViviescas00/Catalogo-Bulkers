@@ -4,14 +4,16 @@ import { useAuthStore } from '@/store/Auth';
 
 const determinarBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+  if (envUrl) {
     return envUrl;
   }
 
-  // Fallback dinámico usando el nombre de host actual (localhost o IP de red local)
+  // Fallback dinámico solo para red local en desarrollo (localhost o IP de red local)
   if (typeof window !== 'undefined' && window.location && window.location.hostname) {
     const host = window.location.hostname;
-    return `http://${host}:3000/api`;
+    if (host === 'localhost' || host === '127.0.0.1' || /^192\.168\./.test(host) || /^10\./.test(host)) {
+      return `http://${host}:3000/api`;
+    }
   }
 
   return 'http://localhost:3000/api';
