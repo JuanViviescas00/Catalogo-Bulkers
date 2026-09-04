@@ -60,6 +60,7 @@ export class AuthService {
 
     const payload = {
       sub: usuario._id,
+      email: usuario.email,
       rol: usuario.rol,
     };
 
@@ -67,7 +68,14 @@ export class AuthService {
       expiresIn: env.JWT_EXPIRES_IN,
     });
 
-    return { token };
+    return {
+      token,
+      usuario: {
+        id: usuario._id,
+        email: usuario.email,
+        rol: usuario.rol,
+      },
+    };
   }
 }
 

@@ -13,7 +13,8 @@ export const useAuthStore = defineStore(
 
     const estaAutenticado = computed(() => !!token.value);
     const esAdmin = computed(() => rol.value === 'admin' || usuario.value?.rol === 'admin');
-    const nombreUsuario = computed(() => usuario.value?.nombre || usuario.value?.email || 'Usuario');
+    const etiquetaRol = computed(() => (esAdmin.value ? 'Admin' : 'Usuario'));
+    const nombreUsuario = computed(() => usuario.value?.nombre || usuario.value?.email || etiquetaRol.value);
     const obtenerUsuario = computed(() => usuario.value);
 
     function setSession(data) {
@@ -92,6 +93,7 @@ export const useAuthStore = defineStore(
       cargando,
       estaAutenticado,
       esAdmin,
+      etiquetaRol,
       nombreUsuario,
       obtenerUsuario,
       setSession,
