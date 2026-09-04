@@ -26,6 +26,21 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Ruta raíz informativa
+app.get('/', (req, res) => {
+  res.status(200).json({
+    mensaje: 'API Catalogo Bulkers activa en Vercel',
+    status: 'ok',
+    endpoints: {
+      health: '/health',
+      productos: '/api/productos',
+      categorias: '/api/categorias',
+      proveedores: '/api/proveedores',
+      auth: '/api/auth/login',
+    },
+  });
+});
+
 // Endpoint de salud (Healthcheck)
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'ok', mongo: 'up' });
