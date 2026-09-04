@@ -2,9 +2,18 @@ import app from '../src/app.js';
 import connectDB from '../src/config/db.js';
 import sembrarAdmin from '../src/scripts/seed.js';
 
-// Inicializar conexión a base de datos
-connectDB()
-  .then(() => sembrarAdmin())
-  .catch((err) => console.error('[Vercel Serverless DB Error]:', err));
+let isReady = false;
 
-export default app;
+export default async function handler(req, res) {
+  if (!isReady) {
+    try {
+      await connectDB();
+      await sembrarAdmin();
+      isReady = true;
+    } catch (err) {
+      console.error('[Vercel Serverless DB Error]:', err.message);
+    }
+  }
+
+  return app(req, res);
+}

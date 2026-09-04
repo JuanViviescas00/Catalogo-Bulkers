@@ -1,12 +1,18 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import env from '../config/env.js';
 
-const uploadDir = path.resolve('uploads');
+// En entornos serverless como Vercel, la carpeta con permisos de escritura es os.tmpdir() (/tmp)
+const uploadDir = path.join(os.tmpdir(), 'uploads');
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (err) {
+  console.warn('[Uploads] Aviso al inicializar directorio de subidas:', err.message);
 }
 
 const storage = multer.diskStorage({
