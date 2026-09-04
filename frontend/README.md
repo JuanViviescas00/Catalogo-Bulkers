@@ -1,7 +1,7 @@
 # Estructura Frontend — Vue 3 + Quasar + Vue Router + Pinia
 
-Proyecto **muestra** para aprendices: consume el backend de practica (cursos y
-aprendices) aplicando una estructura de carpetas donde cada una tiene **una sola
+Proyecto de catálogo: consume el backend de productos, categorías y proveedores
+aplicando una estructura de carpetas donde cada una tiene **una sola
 responsabilidad**.
 
 ---
@@ -87,8 +87,8 @@ mismo carpeta por carpeta, para consultarlo mientras se programa.
 ## 4. El recorrido de un dato (lo mas importante)
 
 ```
-CursosView.vue          valida el formulario con las rules de Quasar y llama a
-      │                 post("/cursos/register", datos)
+ProductosView.vue       valida el formulario con las rules de Quasar y llama a
+  │                 post("/productos", datos)
       ▼
 services/api.service.js hace la peticion y devuelve el data de la respuesta
       │
@@ -113,21 +113,20 @@ como funciones sueltas para que en la vista se lean cortas:
 ```js
 import { get, post, put, del } from "@/services/api.service";
 
-const cursos = await get("/cursos");              // leer
-await post("/cursos/register", datos);            // crear
-await put(`/cursos/update/${id}`, datos);         // actualizar
-await put(`/cursos/inactive/${id}`);              // actualizar sin cuerpo
-await del(`/cursos/${id}`);                       // borrar
+const productos = await get("/productos");       // leer
+await post("/productos", datos);                 // crear
+await put(`/productos/${id}`, datos);             // actualizar
+await del(`/productos/${id}`);                    // eliminar
 ```
 
-- `get` recibe **solo la URL**. Si algun dia hace falta filtrar, el filtro se
-  escribe dentro de la misma URL: `get("/cursos?status=0")`.
+- `get` recibe **solo la URL**. Si hace falta filtrar, el filtro se escribe
+  dentro de la misma URL: `get("/productos?limit=100")`.
 - Devuelven directamente el `data`, no el objeto completo de axios.
 - No llevan `try/catch`: el error sube hasta la vista, que decide que mensaje
   mostrar.
 - Se llama `del` y no `delete` porque `delete` es palabra reservada de
   JavaScript. Este backend no la usa: aplica **borrado logico** con
-  `put(/cursos/inactive/:id)`.
+  las operaciones de productos y administracion.
 
 ### El estado
 
@@ -142,7 +141,7 @@ sube **solo** lo que comparten varias vistas:
 
 ## 5. Sesion con JWT
 
-La API esta protegida: `/cursos` y `/aprendices` responden `401` sin token. El
+La API esta protegida: las rutas de administracion responden `401` sin token. El
 recorrido completo:
 
 ```
@@ -204,17 +203,17 @@ El guard trabaja con dos marcas del `meta`:
 
 | Marca | Significado | Rutas |
 | --- | --- | --- |
-| `requiereAuth: true` | hay que tener sesion | cursos, aprendices, registro |
+| `requiereAuth: true` | hay que tener sesion | productos, proveedores, categorias, usuarios |
 | `soloInvitados: true` | solo se entra SIN sesion | login |
 
 La segunda evita que alguien ya autenticado vuelva al login: el guard lo devuelve
-a `cursos`.
+a la pantalla de catálogo.
 
 Para marcar una ruta como privada basta con su `meta`:
 
 ```js
-{ path: "cursos", name: "cursos", component: CursosView,
-  meta: { titulo: "Cursos", requiereAuth: true } }
+{ path: "productos", name: "productos", component: ProductosView,
+  meta: { titulo: "Productos", requiereAuth: true } }
 ```
 
 ---
@@ -257,8 +256,8 @@ Reglas disponibles: `requerido`, `esEmail`, `minimo`, `maximo`, `soloNumeros`,
 | Ruta            | Vista                | Sesion   | Para que sirve                             |
 | --------------- | -------------------- | -------- | ------------------------------------------ |
 | `/#/`           | `LoginView.vue`      | invitado | **La raiz**: iniciar sesion                |
-| `/#/cursos`     | `CursosView.vue`     | privada  | CRUD de cursos con formulario validado     |
-| `/#/aprendices` | `AprendicesView.vue` | privada  | CRUD de aprendices y su relacion con curso |
+| `/#/productos`  | `ProductosView.vue`  | privada  | CRUD de productos                          |
+| `/#/proveedores`| `ProveedoresView.vue`| privada  | Gestión de proveedores                     |
 | `/#/registro`   | `RegistroView.vue`   | privada  | Crear usuarios (tarea interna)             |
 | `/#/acerca`     | `AboutView.vue`      | publica  | Explicacion de la estructura               |
 | cualquier otra  | `NotFoundView.vue`   | publica  | 404                                        |
@@ -304,26 +303,11 @@ function protegerRutas(to) {
 ```
 
 Hoy ninguna ruta esta marcada como privada porque este backend no maneja login.
-Para verlo funcionar, agrega `requiereAuth: true` al `meta` de la ruta de cursos
-y entra a `/#/cursos` sin token en el `localStorage`.
+Para verlo funcionar, inicia sesión y entra a las rutas de administración.
 
 ---
 
 ## 8. Detalles que suelen costar
-
-**El `<q-select>` de cursos manda el `_id`, no el nombre**
-
-```vue
-<q-select v-model="formulario.curso" :options="cursoStore.opcionesSelect" emit-value map-options />
-```
-
-`emit-value` + `map-options` hacen que en pantalla se vea el texto pero el
-`v-model` guarde el `_id`, que es lo que Mongo necesita para la relacion.
-
-**Al listar, el curso llega completo**
-
-El backend hace `.populate("curso")`, por eso se puede pintar
-`aprendiz.curso?.nombre`. El `?.` evita que reviente si quedara sin curso.
 
 **Los registros no se borran**
 
@@ -340,7 +324,6 @@ Se usa borrado logico: `status = 0` activo, `status = 1` inactivo, con las rutas
 | `ERR_CONNECTION_REFUSED`       | El backend no esta corriendo            | Terminal del backend    |
 | `404 La ruta solicitada no existe` | La URL no coincide (¿falto `/register`?) | `/services/*.js`   |
 | `400 Error en la validacion`   | Faltan campos o son invalidos           | Revisar `errors[]`      |
-| `undefined` al pintar el curso | Falta `.populate()`                     | Controlador del backend |
 | `401 No hay token`             | No inicio sesion, o se borro el `localStorage` | Volver a entrar  |
 | `401 Token no valido`          | El token vencio (dura 4 h) o cambio `SECRETORPRIVATEKEY` | Volver a entrar |
 | Entra al login una y otra vez  | El backend no responde, y el `401` cierra la sesion | Revisar que el backend este arriba |
@@ -352,14 +335,14 @@ URL, el body enviado, el status y la respuesta.
 
 ## 10. Ejercicios propuestos
 
-1. Agregar el campo `telefono` al aprendiz (modelo y validacion en el backend,
+1. Agregar el campo `telefono` a un proveedor (modelo y validacion en el backend,
    formulario y columna de la tabla en el frontend).
 2. Crear la regla `soloLetras()` en `/utils/reglas.js` y aplicarla al nombre.
 3. Proteger tambien la ruta `acerca` con `requiereAuth: true` y comprobar que el
    guard redirige al login.
 4. Mostrar el `rol` del usuario en la barra superior, y ocultar el boton "Nuevo
-   curso" cuando el rol no sea `ADMIN`.
+  producto" cuando el rol no sea `ADMIN`.
 5. Bajar la duracion del token a `"30s"` en `helpers/generarJWT.js` del backend y
    observar como el `401` cierra la sesion sola.
-6. Crear el modulo `Instructor` completo siguiendo el mismo patron: modelo y
-   rutas en el backend, ruta en `/router`, vista y opcion de menu.
+6. Crear un modulo de promociones siguiendo el mismo patron: modelo y rutas en
+  el backend, ruta en `/router`, vista y opcion de menu.

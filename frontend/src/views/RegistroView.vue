@@ -168,8 +168,8 @@ const registrar = async () => {
                   flat
                   no-caps
                   color="grey-8"
-                  label="Volver a cursos"
-                  :to="{ name: 'cursos' }"
+                  label="Volver a usuarios"
+                  :to="{ name: 'usuarios' }"
                 />
                 <q-btn
                   unelevated

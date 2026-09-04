@@ -53,9 +53,7 @@ export const sembrarAdmin = async () => {
     }
 
     // 4. Productos Iniciales de Demostración
-    const countProductos = await Producto.countDocuments();
-    if (countProductos === 0) {
-      const productosDemo = [
+    const productosDemo = [
         {
           sku: 'BLK-001',
           nombre: 'Empaque Multiuso Bulk X50',
@@ -98,17 +96,119 @@ export const sembrarAdmin = async () => {
           precio: 42000,
           stock: 120,
           categoria: 'hogar',
-          descripcion: 'Lámpara portatil de escritorio con batería de 2000mAh y control táctil.',
+          descripcion: 'Lámpara portátil de escritorio con batería de 2000mAh y control táctil.',
           imagenUrl: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'AUD-020',
+          nombre: 'Audífonos Bluetooth con Cancelación de Ruido',
+          precio: 149000,
+          stock: 35,
+          categoria: 'electronica',
+          descripcion: 'Audífonos inalámbricos con micrófono integrado y hasta 30 horas de batería.',
+          imagenUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'TEC-030',
+          nombre: 'Teclado Mecánico Retroiluminado USB',
+          precio: 128000,
+          stock: 28,
+          categoria: 'electronica',
+          descripcion: 'Teclado compacto con switches mecánicos, conexión USB y retroiluminación ajustable.',
+          imagenUrl: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'MOU-031',
+          nombre: 'Mouse Inalámbrico Ergonómico',
+          precio: 59000,
+          stock: 70,
+          categoria: 'electronica',
+          descripcion: 'Mouse silencioso de precisión con conexión inalámbrica y diseño cómodo para uso diario.',
+          imagenUrl: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'ORG-040',
+          nombre: 'Organizador Modular de Escritorio',
+          precio: 36000,
+          stock: 55,
+          categoria: 'hogar',
+          descripcion: 'Organizador con compartimentos para mantener en orden útiles, accesorios y documentos.',
+          imagenUrl: 'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'CAF-050',
+          nombre: 'Cafetera de Goteo 12 Tazas',
+          precio: 119000,
+          stock: 18,
+          categoria: 'hogar',
+          descripcion: 'Cafetera programable con jarra de vidrio, filtro reutilizable y función antigoteo.',
+          imagenUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'ESC-110',
+          nombre: 'Escalera Plegable de Aluminio 4 Peldaños',
+          precio: 215000,
+          stock: 12,
+          categoria: 'herramientas',
+          descripcion: 'Escalera liviana y resistente con peldaños antideslizantes para el hogar y el taller.',
+          imagenUrl: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'CIN-120',
+          nombre: 'Cinta Métrica Profesional de 8 Metros',
+          precio: 27000,
+          stock: 90,
+          categoria: 'herramientas',
+          descripcion: 'Cinta métrica reforzada con gancho magnético, freno y carcasa resistente a impactos.',
+          imagenUrl: 'https://images.unsplash.com/photo-1581147036324-c17ac41d8ba9?w=500&auto=format&fit=crop',
+          proveedorId: proveedor._id,
+          disponible: true,
+          activo: true,
+        },
+        {
+          sku: 'ASP-060',
+          nombre: 'Aspiradora Portátil Multiuso',
+          precio: 175000,
+          stock: 20,
+          categoria: 'hogar',
+          descripcion: 'Aspiradora compacta para limpieza seca de muebles, vehículos y espacios pequeños.',
+          imagenUrl: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=500&auto=format&fit=crop',
           proveedorId: proveedor._id,
           disponible: true,
           activo: true,
         },
       ];
 
-      await Producto.insertMany(productosDemo);
-      console.log(' [SEED] Productos de demostración creados exitosamente (4 ítems).');
+    for (const producto of productosDemo) {
+      await Producto.updateOne(
+        { sku: producto.sku },
+        { $setOnInsert: producto },
+        { upsert: true }
+      );
     }
+
+    console.log(` [SEED] Catálogo verificado: ${productosDemo.length} productos de demostración disponibles.`);
   } catch (error) {
     console.error('❌ [SEED] Error durante el proceso de siembra:', error.message);
   }
