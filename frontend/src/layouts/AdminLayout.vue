@@ -63,33 +63,18 @@ const salir = () => {
         <q-toolbar-title class="text-weight-bold text-subtitle1">{{ tituloSeccion }}</q-toolbar-title>
 
         <template v-if="auth.estaAutenticado">
-          <div class="row items-center q-gutter-x-sm">
-            <q-badge
-              :color="auth.esAdmin ? 'amber-9' : 'teal-8'"
-              class="text-weight-bolder q-px-sm q-py-xs shadow-1 text-white"
-              style="font-size: 11px; letter-spacing: 0.5px; border-radius: 6px;"
-            >
-              <q-icon :name="auth.esAdmin ? 'shield' : 'person'" size="14px" class="q-mr-xs" />
-              {{ auth.esAdmin ? 'ADMIN' : 'USUARIO' }}
-            </q-badge>
-
-            <span v-if="auth.nombreUsuario && auth.nombreUsuario !== 'Admin' && auth.nombreUsuario !== 'Usuario'" class="text-caption gt-xs admin-user q-mr-xs">
-              {{ auth.nombreUsuario }}
-            </span>
-
-            <q-btn
-              flat
-              dense
-              round
-              icon="logout"
-              size="md"
-              class="text-white"
-              style="z-index: 10001; cursor: pointer;"
-              @click="salir"
-            >
-              <q-tooltip>Cerrar sesión</q-tooltip>
-            </q-btn>
-          </div>
+          <q-btn
+            flat
+            dense
+            round
+            icon="logout"
+            size="md"
+            class="text-white"
+            style="z-index: 10001; cursor: pointer;"
+            @click="salir"
+          >
+            <q-tooltip>Cerrar sesión</q-tooltip>
+          </q-btn>
         </template>
       </q-toolbar>
     </q-header>
