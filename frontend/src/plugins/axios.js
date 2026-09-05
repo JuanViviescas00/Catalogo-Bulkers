@@ -2,9 +2,9 @@ import axios from 'axios';
 import { router } from '@/router';
 import { useAuthStore } from '@/store/Auth';
 
-const determinarBaseURL = () => {
+export const determinarBaseURL = () => {
   const envUrl = import.meta.env.VITE_API_URL;
-  if (envUrl) {
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
     return envUrl;
   }
 
