@@ -26,20 +26,18 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Ruta raíz informativa
-app.get('/', (req, res) => {
-  res.status(200).json({
-    mensaje: 'API Catalogo Bulkers activa en Vercel',
-    status: 'ok',
-    endpoints: {
-      health: '/health',
-      productos: '/api/productos',
-      categorias: '/api/categorias',
-      proveedores: '/api/proveedores',
-      auth: '/api/auth/login',
-    },
-  });
-});
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const publicPath = path.resolve(__dirname, '../public');
+
+// Servir archivos estáticos del frontend si existe la carpeta public
+if (fs.existsSync(publicPath)) {
+  app.use(express.static(publicPath));
+}
 
 // Endpoint de salud (Healthcheck)
 app.get('/health', (req, res) => {
@@ -53,6 +51,28 @@ app.use('/api/categorias', categoriaRoutes);
 app.use('/api/productos', productoRoutes);
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/imports', importRoutes);
+
+// Servir la SPA de Vue para cualquier ruta no capturada por la API
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/health')) {
+    return next();
+  }
+  const indexPath = path.join(publicPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    return res.sendFile(indexPath);
+  }
+  res.status(200).json({
+    mensaje: 'API Catalogo Bulkers activa en Vercel',
+    status: 'ok',
+    endpoints: {
+      health: '/health',
+      productos: '/api/productos',
+      categorias: '/api/categorias',
+      proveedores: '/api/proveedores',
+      auth: '/api/auth/login',
+    },
+  });
+});
 
 // Manejador centralizado de errores (Debe ser el último middleware)
 app.use(errorHandler);

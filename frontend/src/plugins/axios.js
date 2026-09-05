@@ -8,15 +8,17 @@ const determinarBaseURL = () => {
     return envUrl;
   }
 
-  // Fallback dinámico solo para red local en desarrollo (localhost o IP de red local)
-  if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+  // En entorno local de desarrollo
+  if (typeof window !== 'undefined' && window.location) {
     const host = window.location.hostname;
     if (host === 'localhost' || host === '127.0.0.1' || /^192\.168\./.test(host) || /^10\./.test(host)) {
       return `http://${host}:3000/api`;
     }
+    // En producción (ej. Vercel o Render) en el mismo host
+    return '/api';
   }
 
-  return 'http://localhost:3000/api';
+  return '/api';
 };
 
 const api = axios.create({
